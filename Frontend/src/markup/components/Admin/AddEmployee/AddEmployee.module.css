@@ -1,0 +1,34 @@
+.addEmployee_form {
+  width: 100%;
+  margin-bottom: 40px;
+  border-radius: 5px;
+}
+
+.addEmployee_form input {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-weight: lighter;
+}
+
+.employee__outer__wrapper {
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.addEmployee_title {
+  margin-bottom: 0px !important;
+}
+
+.add_employee_role {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.error__message {
+  color: red;
+  font-size: 14px;
+  margin-top: 1px;
+  text-align: end;
+}
