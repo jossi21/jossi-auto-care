@@ -4,11 +4,14 @@ import AddEmployeeForm from "../../../components/Admin/AddEmployee/AddEmployeeFo
 
 const AddEmployee = () => {
   return (
-    <div class="d-flex bg-light ">
-      <div class="col-md-3">
+    <div className="d-flex bg-light admin-layout-container">
+      <div
+        className="col-4 col-md-3 admin-menu-column "
+        style={{ paddingLeft: 0 }}
+      >
         <AdminMenu />
       </div>
-      <div class="col-md-9">
+      <div className="col-md-9 form-column">
         <AddEmployeeForm />
       </div>
     </div>

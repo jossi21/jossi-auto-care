@@ -1,10 +1,10 @@
 import React from "react";
-import { Route, Routes } from "react-router";
-import Home from "../markup/pages/Home/Home";
-import AddEmployee from "../markup/pages/Admin/AddEmployee/AddEmployee";
-import Login from "../markup/pages/Login/Login";
 import Header from "../markup/components/Header/Header";
 import Footer from "../markup/components/Footer/Footer";
+import { Route, Routes } from "react-router";
+import Home from "../markup/pages/Home/Home";
+import Login from "../markup/pages/Login/Login";
+import AddEmployee from "../markup/pages/Admin/employee/AddEmployee";
 const router = () => {
   return (
     <>

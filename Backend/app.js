@@ -1,51 +1,33 @@
-// import dotenv module
-require("dotenv").config();
-
-// import express module
+//  import express
 const express = require("express");
-
-// import cors module to give permission to specific domains
+// import .env
+require("dotenv").config();
+// import the router to use in the app
+const router = require("./routes");
+// import cors module
 const cors = require("cors");
-// console.log("DB URL:", process.env.DATABASE_URL);
-
-// import sanitize-html
-const { sanitizeMid } = require("./utils/sanitizeMiddleware");
-
-// import main router
-const mainRouter = require("./routes/index");
-
-//import port from .env
+// import the variable that hold our server port
 const port = process.env.PORT;
 
-// create he webserver
-const app = express();
-
-// set cors option
+// define cors options
 const corsOptions = {
   origin: process.env.FRONTEND_URL,
-  optionsSuccessStates: 200,
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization", "Accept"],
+  optionSuccessStatus: 200,
 };
+// create web server
+const app = express();
 
-// convert the response text in to json form
+// Body parser
 app.use(express.json());
 
-// just use the middleware
-app.use(sanitizeMid);
-
-// use the cors
+// use cors
 app.use(cors(corsOptions));
-
-// use the mainRouter
-app.use(mainRouter);
-// test
-app.get("/", (req, res) => {
-  res.send("The Server Running ");
-});
-
-// start the webserver
+// add the router to the app as middleware
+app.use(router);
+// start the server
 app.listen(port, () => {
-  console.log(`Server runs on port: http://localhost:${port}`);
+  console.log(`Server running on port: ${port}`);
 });
+
+// export the web server for use it the application
+module.exports = app;

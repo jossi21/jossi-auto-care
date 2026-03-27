@@ -1,14 +1,14 @@
-// import express to use route module from it
+// import express
 const express = require("express");
 
-// initiate the route
+// define router method from the express module
 const router = express.Router();
 
-// import loginController
+// import the function that control login process
 const loginController = require("../controllers/login.controller");
 
-// define the router of login
-router.use("/api/employee/login", loginController.loginUser);
+// define the path
+router.post("/api/employee/login", loginController.loginUser);
 
-// export the module
+// export login router
 module.exports = router;

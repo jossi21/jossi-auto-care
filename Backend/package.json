@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Jossi garage backend",
+  "description": "Jossi Auto Care backend",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,14 +11,17 @@
   "dependencies": {
     "@prisma/client": "^6.19.0",
     "bcrypt": "^6.0.0",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "dompurify": "^3.3.0",
-    "dotenv": "^17.2.3",
-    "express": "^5.1.0",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-pure-sanitize": "^1.0.2",
     "jsdom": "^27.2.0",
     "jsonwebtoken": "^9.0.3",
-    "mysql2": "^3.15.3",
+    "mysql2": "^3.20.0",
     "prisma": "^6.19.0",
+    "sanitize": "^2.1.2",
     "sanitize-html": "^2.17.0"
   }
 }

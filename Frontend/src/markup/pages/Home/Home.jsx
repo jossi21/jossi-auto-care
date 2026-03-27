@@ -13,7 +13,7 @@ import videoIntoImage from "../../../assets/template_assets/Custom/video_intro_i
 const Home = () => {
   return (
     <>
-      {/* <!-- Bnner Section --> */}
+      {/* <!-- Banner Section --> */}
       <section className="video-section">
         <div
           data-parallax='{"y": 50}'

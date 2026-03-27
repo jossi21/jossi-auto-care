@@ -1,62 +1,49 @@
-// import the login service
-const loginService = require("../services/login.service");
-
-// import employee service
-const employeeService = require("../services/employee.service");
+// import db config
+const conn = require("../config/db.config");
 
 // import jwt
 const jwt = require("jsonwebtoken");
 
-// import the secret key from the env
+// import token secret key
 const jwtSecret = process.env.JWT_SECRET;
 
+//  import login service function
+const loginService = require("../services/login.service");
+
+// the function used to create token and store in to local memory
 async function loginUser(req, res, next) {
   try {
-    const loginData = req.body;
-    // console.log(loginData);
-    // console.log(req.headers);
-    const employeeData = await loginService.loginUser(loginData);
-
-    if (!employeeData) {
-      return res.status(500).json({ status: "error", message: "Server error" });
+    // console.log(req.body);
+    //  store login data in to the variable
+    let userData = req.body;
+    // pass the email in to service login function
+    const employee = await loginService.loginUser(userData);
+    // console.log(employee);
+    // the response if the user fail
+    if (employee.status === "fail") {
+      res.json({
+        status: employee.status,
+        message: employee.message,
+      });
     }
 
-    if (employeeData.status === "success") {
-      const employee = await employeeService.getEmployeeByItsEmail(
-        loginData.employee_email
-      );
-      const employeeInfo = employee.employee_info?.[0] || {};
-      const employeeRole = employee.employee_roles?.[0] || {};
-
-      //  test the fetch data
-      const payload = {
-        employee_id: employee.employee_id,
-        employee_email: employee.employee_email,
-        employee_role: employeeRole.company_role_id,
-        employee_first_name: employeeInfo.employee_first_name,
-      };
-      // console.log(payRole);
-
-      // create token to logged user
-      const token = jwt.sign(payload, jwtSecret, {
-        expiresIn: "24h",
-      });
-      // console.log(token);
-      const createdToken = {
-        employee_token: token,
-      };
-
-      return res.status(200).json({
-        status: "success",
-        message: "Employee Logged in Successfully",
-        data: createdToken,
-      });
-    } else {
-      return res.status(401).json(employeeData);
-    }
+    // // if the user is login successfully we generate the token and store it in local storage
+    // // prepare the payload
+    const payload = {
+      employee_first_name: employee.data.employee_first_name,
+      employee_role: employee.data.company_role_id,
+    };
+    // generate the token
+    const token = jwt.sign(payload, jwtSecret, { expiresIn: "24h" });
+    // console.log(token);
+    // success response
+    res.status(200).json({
+      status: employee.status,
+      message: employee.message,
+      employee_token: token,
+    });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ status: "error", message: "Server error" });
+    console.log(error);
   }
 }
 

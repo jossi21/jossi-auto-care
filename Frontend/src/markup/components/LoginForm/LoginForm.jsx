@@ -1,106 +1,97 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import classes from "./LoginForm.module.css";
-import loginService from "../../../services/login.service";
+import loginService from "../../pages/Admin/services/login.service";
 
 const LoginForm = () => {
-  // initiate useState
-  const nav = useNavigate();
-  const location = useLocation();
+  // define states that holed the input values
   const [employee_email, setEmployeeEmail] = useState("");
   const [employee_password, setEmployeePassword] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+
+  // error handler states
+  const [emailErr, setEmailErr] = useState("");
+  const [passwordErr, setPasswordErr] = useState("");
+  const [successResponse, setSuccessResponse] = useState("");
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // set the handler function
-  const LoginHandler = async (e) => {
-    // prevent the default
+  // the function handle the submission process
+  const loginHandler = (e) => {
+    // prevent default behavior of the browser
     e.preventDefault();
-    setLoading(true);
 
-    // clear previous errors
-    setServerError("");
-    setEmailError("");
-    setPasswordError("");
+    // Here is the validation process
+    let flag = true;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
-    // set the flag that control the validation of the form
-    let valid = true;
-
-    // now set up the validation of email
+    // email validation
     if (!employee_email) {
-      setEmailError("Please first enter the email");
-      valid = false;
-    } else if (!employee_email.includes("@")) {
-      setEmailError("Invalid email format");
-      valid = false;
+      setEmailErr("email address required");
+      flag = false;
+    } else if (!emailRegex.test(employee_email)) {
+      setEmailErr("Allowed email (example@gmail.com)");
+      flag = false;
     } else {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!regex.test(employee_email)) {
-        setEmailError("Invalid email format");
-        valid = false;
-      } else {
-        setEmailError("");
-      }
+      setEmailErr("");
     }
 
-    // initiate password validation
-    if (!employee_password || employee_password.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
-      valid = false;
+    // password validation
+    if (!employee_password) {
+      setPasswordErr("password required");
+      flag = false;
+    } else if (employee_password.length <= 6) {
+      setPasswordErr("password must be at least 6 char");
+      flag = false;
     } else {
-      setPasswordError("");
+      setPasswordErr("");
     }
 
-    // if the form is not valid
-    if (!valid) {
+    if (!flag) {
       return;
     }
-
-    // now put the data get from the user with in a variable
-    const loginDataFromTheUser = {
+    const formData = {
       employee_email,
       employee_password,
     };
-    // sef if the data get
-    console.log(loginDataFromTheUser);
+    // console.log(formData);
+    setLoading(true);
+    setServerError("");
+    setSuccessResponse("");
 
-    // call the service
-    const loggedEmployee = loginService.Login(loginDataFromTheUser);
-    // test it
-    console.log(loggedEmployee);
-    loggedEmployee
-      .then((response) => response.json())
-      .then((response) => {
-        console.log(response);
-
-        // make it conditional
-        if (response.status === "success") {
-          // save the user in the local storage
-          if (response.data.employee_token) {
-            console.log(response.data);
+    const singedEmployee = loginService.loginEmployee(formData);
+    // console.log(singedEmployee);
+    singedEmployee
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        if (data.status === "success") {
+          // console.log(data.employee_token);
+          if (data.employee_token) {
             localStorage.setItem(
               "employee",
-              JSON.stringify(response.data.employee_token)
+              JSON.stringify(data.employee_token),
             );
           }
-          // redirect the user to the dashboard
-          console.log(location);
           if (location.pathname === "/login") {
-            window.location.replace("/");
+            setTimeout(() => {
+              setSuccessResponse(data.message);
+              window.location.replace("/");
+            }, 2000);
           } else {
-            window.location.reload();
+            window.location.replace();
           }
+          setLoading(false);
         } else {
-          setServerError(response.message);
+          setTimeout(() => {
+            setServerError(data.message);
+          }, 3000);
+          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setServerError("Something happened. Please try again later.");
-      })
-      .finally(() => {
+        setTimeout(() => {
+          setServerError(err.message);
+        }, 3000);
         setLoading(false);
       });
   };
@@ -108,81 +99,68 @@ const LoginForm = () => {
     <>
       {/* <!--login Section--> */}
       <section className="contact-section">
-        <div className="auto-container">
+        <div className={`auto-container ${classes.login__form}`}>
           <div className="contact-title">
             <h2>Login to your account</h2>
           </div>
           <div className="row clearfix">
-            {/* <!--Form Column--> */}
-            <div className="form-column col-lg-7">
-              <div className="inner-column">
-                {/* <!--Contact Form--> */}
-                <div className="contact-form">
-                  <form
-                    method="post"
-                    action="sendemail.php"
-                    id="contact-form"
-                    onSubmit={LoginHandler}
-                  >
-                    <div className="row clearfix">
-                      {serverError && (
-                        <div className={classes.error__message}>
-                          {serverError}
-                        </div>
-                      )}
-                      <div className="form-group col-md-12">
-                        <input
-                          type="text"
-                          name="employee_email"
-                          placeholder="Your Email"
-                          required
-                          value={employee_email}
-                          onChange={(e) => setEmployeeEmail(e.target.value)}
-                          autoComplete="email"
-                        />
-                        {emailError && (
-                          <div className={classes.error__message}>
-                            {emailError}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="form-group col-md-12">
-                        <input
-                          type="password"
-                          name="employee_password"
-                          placeholder="password"
-                          required
-                          value={employee_password}
-                          onChange={(e) => setEmployeePassword(e.target.value)}
-                          autoComplete="current-password"
-                        />
-                        {passwordError && (
-                          <div className={classes.error__message}>
-                            {passwordError}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="form-group col-md-12">
-                        <button
-                          className="theme-btn btn-style-one"
-                          type="submit"
-                          data-loading-text="Please wait..."
-                        >
-                          {loading ? (
-                            <span>Please Wait...</span>
-                          ) : (
-                            <span>Login</span>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </form>
+            {/* <!--Contact Form--> */}
+            <form method="post" id="contact-form" onSubmit={loginHandler}>
+              {serverError ? (
+                <div className={classes.server__error__message}>
+                  {serverError}
                 </div>
-                {/* <!--End Contact Form--> */}
+              ) : (
+                <div className={classes.success__response__message}>
+                  {successResponse}
+                </div>
+              )}
+              <div className="">
+                {/* email input */}
+                <div className="form-group col-md-12">
+                  <input
+                    type="text"
+                    name="email"
+                    placeholder="Your Email"
+                    className={emailErr ? classes.input__error : ""}
+                    value={employee_email}
+                    onChange={(e) => setEmployeeEmail(e.target.value)}
+                  />
+                  {emailErr && (
+                    <div className={classes.error__message}>{emailErr}</div>
+                  )}
+                </div>
+                {/* input password */}
+                <div className="form-group col-md-12">
+                  <input
+                    type="password"
+                    name="form_subject"
+                    placeholder="Employee password"
+                    className={passwordErr ? classes.input__error : ""}
+                    value={employee_password}
+                    onChange={(e) => setEmployeePassword(e.target.value)}
+                  />
+                  {passwordErr && (
+                    <div className={classes.error__message}>{passwordErr}</div>
+                  )}
+                </div>
+
+                <div className="form-group col-md-12">
+                  <button
+                    className="theme-btn btn-style-one"
+                    type="submit"
+                    data-loading-text="Please wait..."
+                  >
+                    {" "}
+                    {loading ? (
+                      <span>Please Wait...</span>
+                    ) : (
+                      <span>add employee</span>
+                    )}
+                  </button>
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </section>

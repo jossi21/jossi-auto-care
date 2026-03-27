@@ -1,24 +1,26 @@
-/* admin menu  */
-.adminmenu__inner__wrapper {
+.AdminMenu_outer_wrapper {
   background-color: #11293e;
-  border-radius: 5px;
-  height: 600px;
+  height: 100%;
 }
-/* admin menu  */
+
 .AdminMenu_div {
-  padding: 15px;
+  padding: 15px 15px 15px 25px;
   background-color: #0d0d0d;
 }
 
 .AdminMenu_div h4 {
   color: #ffffff;
 }
+
 .adminmenu__inner__wrapper a {
   display: flex;
   color: #ffffff;
   text-decoration: none;
-  padding: 10px;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
+
 .adminmenu__inner__wrapper hr {
   border: 1px solid #d4cdcd;
   margin: 5px 0;

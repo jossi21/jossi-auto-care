@@ -1,6 +1,55 @@
+.login__form {
+  width: 600px;
+  margin-right: 40px;
+  border-radius: 5px;
+  display: grid;
+  gap: 10px;
+  margin: auto;
+}
+
+.login__form input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-weight: 300;
+}
+.login__form input:focus {
+  outline: 1.5px solid #31da2b;
+}
+
+/* if the error happened  */
+.input__error {
+  outline: 1px solid #d93838;
+}
+
 .error__message {
   color: red;
   font-size: 14px;
   margin-top: 1px;
   text-align: end;
+}
+
+/* server error response styling */
+.server__error__message {
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 1px 0px 10px 15px;
+}
+
+/* Success response styling */
+.success__response__message {
+  color: rgb(14, 234, 14);
+  font-size: 16px;
+  font-weight: bold;
+  padding: 1px 0px 10px 15px;
+}
+
+/* media query */
+@media screen and (max-width: 768px) {
+  .login__form {
+    width: 500px;
+    margin: auto;
+  }
 }

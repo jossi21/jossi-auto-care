@@ -1,144 +1,150 @@
 import React, { use, useState } from "react";
 import classes from "./AddEmployee.module.css";
-import employeeService from "../../../../services/employee.service";
+import employeeService from "../../../pages/Admin/services/employee.servicce";
 
 const AddEmployeeForm = () => {
-  // initiate the states which used to get values provide by the user
+  // define states that holed the input values
   const [employee_email, setEmployeeEmail] = useState("");
   const [employee_first_name, setEmployeeFirstName] = useState("");
   const [employee_last_name, setEmployeeLastName] = useState("");
   const [employee_phone, setEmployeePhone] = useState("");
   const [employee_password, setEmployeePassword] = useState("");
-  const [company_role_id, setCompanyRoleId] = useState(1);
   const [active_employee, setActiveEmployee] = useState(1);
+  const [company_role_id, setCompanyRoleID] = useState("");
 
-  // states used to handle Errors
-  const [emailError, setEmailError] = useState("");
-  const [firstNameError, setFirstNameError] = useState("");
-  const [lastNameError, setLastNameError] = useState("");
-  const [phoneNumberError, setPhoneNumberError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  // error handler states
+  const [emailErr, setEmailErr] = useState("");
+  const [firstNameErr, setFirstNameErr] = useState("");
+  const [lastNameErr, setLastNameErr] = useState("");
+  const [phoneNumErr, setPhoneNumErr] = useState("");
+  const [passwordErr, setPasswordErr] = useState("");
+  const [companyRoleErr, setCompanyRoleErr] = useState("");
+  const [successResponse, setSuccessResponse] = useState("");
   const [serverError, setServerError] = useState("");
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // implement add employee handler
-  const addEmployeeHandler = async (e) => {
-    // prevent the default ven of the browser
+  // the function handle the submission process
+  const addEmployeeHandler = (e) => {
+    // prevent default behavior of the browser
     e.preventDefault();
 
-    // start loading
-    setLoading(true);
+    // Here is the validation process
+    let flag = true;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
 
-    // set up Flag
-    let Flag = true;
-
-    // validation of the email
+    // email validation
     if (!employee_email) {
-      setEmailError("Please enter your email");
-      Flag = false;
-    } else if (!employee_email.includes("@")) {
-      setEmailError("Invalid email format");
-      Flag = false;
+      setEmailErr("email address required");
+      flag = false;
+    } else if (!emailRegex.test(employee_email)) {
+      setEmailErr("Allowed email (example@gmail.com)");
+      flag = false;
     } else {
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!regex.test(employee_email)) {
-        setEmailError("Invalid email format");
-      } else {
-        setEmailError("");
-      }
+      setEmailErr("");
     }
 
-    // validation of the first name
+    // first name validation
     if (!employee_first_name) {
-      setFirstNameError("Please enter your first name");
-      Flag = false;
+      setFirstNameErr("First name required");
+      flag = false;
+    } else if (employee_first_name.length < 3) {
+      setFirstNameErr("The name must be more than 3 char");
+      flag = false;
     } else {
-      setFirstNameError("");
+      setFirstNameErr("");
     }
-
-    // validation of last name
+    // first name validation
     if (!employee_last_name) {
-      setLastNameError("Please enter your last name");
-      Flag = false;
+      setLastNameErr("Last name required");
+      flag = false;
     } else {
-      setLastNameError("");
+      setLastNameErr("");
     }
 
-    // validation of the phone number
+    // Phone number validation
+    const phoneRegex = /^(09|\+2519)\d{8}$/;
     if (!employee_phone) {
-      setPhoneNumberError("Please enter your phone number");
-      Flag = false;
+      setPhoneNumErr("Phone number required");
+      flag = false;
+    } else if (typeof employee_email !== "string") {
+      setPhoneNumErr("Phone number must be number");
+      flag = false;
+    } else if (!phoneRegex.test(employee_phone)) {
+      setPhoneNumErr("Use format: 09xxxxxxxx or +2519xxxxxxxx");
+      flag = false;
     } else {
-      const regex = /^(\+251|0)(9\d{8}|[1-9]\d{7,8})$/;
-      if (!regex.test(employee_phone)) {
-        setPhoneNumberError("Enter valid phone number");
-        Flag = false;
-      } else {
-        setPhoneNumberError("");
-      }
+      setPhoneNumErr("");
     }
 
-    // validation of password
-    if (!employee_password || employee_password.length < 8) {
-      setPasswordError("Password must be at least 8 characters");
-      Flag = false;
+    // company role validation
+    if (!company_role_id) {
+      setCompanyRoleErr("Please select employee role");
+      flag = false;
     } else {
-      setPasswordError("");
+      setCompanyRoleErr("");
     }
 
-    // if the form is no valid
-    if (!Flag) {
+    // password validation
+    if (!employee_password) {
+      setPasswordErr("password required");
+      flag = false;
+    } else if (employee_password.length <= 6) {
+      setPasswordErr("password must be at least 6 char");
+      flag = false;
+    } else {
+      setPasswordErr("");
+    }
+
+    if (!flag) {
       return;
     }
-
-    // now collect the data which get from the user
-    const dataFromTheUser = {
+    const formData = {
       employee_email,
       employee_first_name,
       employee_last_name,
       employee_phone,
-      active_employee,
-      company_role_id,
+      company_role_id: parseInt(company_role_id),
       employee_password,
+      active_employee: 1,
     };
 
-    try {
-      //pase the data get from the form
-      const response = await employeeService.AddEmployee(dataFromTheUser);
+    // console.log(formData);
 
-      // Check if response is OK
-      if (!response.ok) {
-        // Handle HTTP errors (404, 500, etc.)
-        const errorText = await response.text();
-        throw new Error("Cannot connect to server.");
-      }
+    const newEmployee = employeeService.addNewEmployee(formData);
+    setLoading(true);
+    newEmployee
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data);
+        if (data.error) {
+          setServerError(data.error);
+          setLoading(false);
+        } else {
+          setSuccessResponse(data.success);
+          setServerError("");
+          // set time out and redirect to home page
+          setTimeout(() => {
+            window.location.href = "/";
+            setSuccessResponse("");
+            setLoading(false);
+          }, 2000);
+        }
+      })
 
-      const data = await response.json();
-
-      if (data.error) {
-        setServerError(data.error);
-      } else {
-        setSuccess(true);
-        setServerError("");
+      .catch((error) => {
+        const errorMessage =
+          (error.response &&
+            error.response.data &&
+            error.response.data.message) ||
+          error.message ||
+          error.toString();
         setTimeout(() => {
-          window.location.href = "/";
-        }, 2000);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-
-      // Show user-friendly error
-      if (error.message.includes("Failed to fetch")) {
-        setServerError("Cannot connect to server.");
-      } else {
-        setServerError("Cannot connect to server.");
-      }
-    } finally {
-      setLoading(false);
-    }
+          setServerError(errorMessage);
+        }, 3000);
+        setServerError("");
+        setLoading(false);
+      });
   };
-
   return (
     <>
       {/* <!--login Section--> */}
@@ -160,113 +166,124 @@ const AddEmployeeForm = () => {
                     id="contact-form"
                     onSubmit={addEmployeeHandler}
                   >
+                    {serverError ? (
+                      <div className={classes.server__error__message}>
+                        {serverError}
+                      </div>
+                    ) : (
+                      <div className={classes.success__response__message}>
+                        {successResponse}
+                      </div>
+                    )}
                     <div className="row clearfix">
-                      {serverError && (
-                        <div className={classes.error__message} role="alert">
-                          {serverError}
-                        </div>
-                      )}
+                      {/* email input */}
                       <div className="form-group col-md-12">
                         <input
                           type="text"
                           name="email"
                           placeholder="Your Email"
-                          required
+                          className={emailErr ? classes.input__error : ""}
                           value={employee_email}
                           onChange={(e) => setEmployeeEmail(e.target.value)}
                         />
-                        {emailError && (
-                          <div className={classes.error__message} role="alert">
-                            {emailError}
+                        {emailErr && (
+                          <div className={classes.error__message}>
+                            {emailErr}
                           </div>
                         )}
                       </div>
-
+                      {/* first name input */}
                       <div className="form-group col-md-12">
                         <input
                           type="text"
                           name="first-name"
                           placeholder="Employee first name"
+                          className={firstNameErr ? classes.input__error : ""}
                           value={employee_first_name}
                           onChange={(e) => setEmployeeFirstName(e.target.value)}
                         />
-                        {firstNameError && (
-                          <div className={classes.error__message} role="alert">
-                            {firstNameError}
+                        {firstNameErr && (
+                          <div className={classes.error__message}>
+                            {firstNameErr}
                           </div>
                         )}
                       </div>
-
+                      {/* last name input */}
                       <div className="form-group col-md-12">
                         <input
                           type="text"
                           name="last-name"
                           placeholder="Employee last name"
+                          className={lastNameErr ? classes.input__error : ""}
                           value={employee_last_name}
                           onChange={(e) => setEmployeeLastName(e.target.value)}
                         />
-                        {lastNameError && (
-                          <div className={classes.error__message} role="alert">
-                            {lastNameError}
+                        {lastNameErr && (
+                          <div className={classes.error__message}>
+                            {lastNameErr}
                           </div>
                         )}
                       </div>
 
+                      {/* phone number inputs */}
                       <div className="form-group col-md-12">
                         <input
                           type="tel"
                           name="phone-number"
                           placeholder="Employee phone "
-                          required
+                          className={phoneNumErr ? classes.input__error : ""}
                           value={employee_phone}
                           onChange={(e) => setEmployeePhone(e.target.value)}
                         />
-                        {phoneNumberError && (
-                          <div className={classes.error__message} role="alert">
-                            {phoneNumberError}
+                        {phoneNumErr && (
+                          <div className={classes.error__message}>
+                            {phoneNumErr}
                           </div>
                         )}
                       </div>
-
+                      {/* role input  */}
                       <div className={` form-group col-md-12 `}>
                         <select
                           name="role"
-                          className={`col-md-12 py-2  ${classes.add_employee_role}`}
+                          className={`col-md-12 py-2 px-1 ${classes.add_employee_role}`}
+                          value={company_role_id}
+                          onChange={(e) => setCompanyRoleID(e.target.value)}
                         >
+                          <option value="">Select a role</option>
                           <option value="1">Employee</option>
                           <option value="2">Manager</option>
                           <option value="3">Admin</option>
                           <option value="4">Customer</option>
                         </select>
+                        {companyRoleErr && (
+                          <div className={classes.error__message}>
+                            {companyRoleErr}
+                          </div>
+                        )}
                       </div>
                       <div className="form-group col-md-12">
                         <input
                           type="password"
                           name="form_subject"
                           placeholder="Employee password"
-                          required
+                          className={passwordErr ? classes.input__error : ""}
                           value={employee_password}
                           onChange={(e) => setEmployeePassword(e.target.value)}
                         />
-                        {passwordError && (
-                          <div className={classes.error__message} role="alert">
-                            {passwordError}
+                        {passwordErr && (
+                          <div className={classes.error__message}>
+                            {passwordErr}
                           </div>
                         )}
                       </div>
 
                       <div className="form-group col-md-12">
-                        <input
-                          id="form_botcheck"
-                          name="form_botcheck"
-                          className="form-control"
-                          type="hidden"
-                        />
                         <button
                           className="theme-btn btn-style-one"
                           type="submit"
                           data-loading-text="Please wait..."
                         >
+                          {" "}
                           {loading ? (
                             <span>Please Wait...</span>
                           ) : (
