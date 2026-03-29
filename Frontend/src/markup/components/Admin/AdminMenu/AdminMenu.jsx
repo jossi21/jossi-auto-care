@@ -1,5 +1,6 @@
 import React from "react";
 import classes from "./AdminMenu.module.css";
+import { Link } from "react-router-dom";
 const AdminMenu = () => {
   return (
     <>
@@ -9,21 +10,21 @@ const AdminMenu = () => {
           <h4>ADMIN MENU</h4>
         </div>
         <div className={classes.adminmenu__inner__wrapper}>
-          <a href="/Dashboard">Dashboard</a>
+          <Link to="/admin">Dashboard</Link>
           <hr />
-          <a href="/orders">Orders</a>
+          <Link to="/orders">Orders</Link>
           <hr />
-          <a href="/new-order">New order</a>
+          <Link to="/new-order">New order</Link>
           <hr />
-          <a href="/add-employee">Add employee</a>
+          <Link to="/admin/add-employee">Add employee</Link>
           <hr />
-          <a href="/employees">Employees</a>
+          <Link to="/admin/employees">Employees</Link>
           <hr />
-          <a href="/add-customer">Add customer</a>
+          <Link to="/admin/add-customer">Add customer</Link>
           <hr />
-          <a href="/customers">Customers</a>
+          <Link to="/admin/customers">Customers</Link>
           <hr />
-          <a href="/services">Services </a>
+          <Link to="/services">Services </Link>
         </div>
       </div>
     </>

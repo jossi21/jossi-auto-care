@@ -16,7 +16,13 @@ const Login = async (loginDataFromTheUser) => {
   return response;
 };
 
+// the function which delete the token from local storage
+const logOut = async () => {
+  // the method used to remove the token
+  localStorage.removeItem("employee");
+};
 // export the function
 export default {
   Login,
+  logOut,
 };

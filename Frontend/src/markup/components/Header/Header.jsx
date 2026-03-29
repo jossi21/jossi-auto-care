@@ -1,11 +1,26 @@
 import React from "react";
 // import the loge image
-import logo from "../../../assets/template_assets/Custom/logo.png";
-
+import logo from "../../../assets/template_assets/Custom/logo1.png";
+import { Link } from "react-router-dom";
 // import icon bar
 import iconBar from "../../../assets/template_assets/images/icons/icon-bar.png";
+import { useAuthContext } from "../../../context/AuthContext";
+import loginService from "../../../services/login.service";
+import getToken from "../../../utils/Auth";
 
 const Header = () => {
+  // console.log(useAuthContext());
+  const { isLogged, setIsLogged, employee } = useAuthContext();
+  // console.log(auth);
+  // console.log("Is logged:", isLogged);
+  // console.log("Employee:", employee);
+  // declare the function  that handle the logout process
+  const Logout = () => {
+    loginService.logOut();
+
+    setIsLogged(false);
+  };
+
   return (
     <>
       {/* Main Header */}
@@ -20,11 +35,19 @@ const Header = () => {
                   Monday - Saturday 7:00AM - 6:00PM
                 </div>
               </div>
-              <div className="right-column">
-                <div className="phone-number">
-                  Schedule Your Appontment Today :<strong>1800 456 7890</strong>
+              {isLogged ? (
+                <div className="right-column">
+                  <div className="phone-number px-5">
+                    <strong>Welcome {employee?.employee_first_name}</strong>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="right-column">
+                  <div className="phone-number">
+                    Schedule Today :<strong>1800 456 7890</strong>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -36,9 +59,9 @@ const Header = () => {
               {/* <!--Logo--> */}
               <div className="logo-box">
                 <div className="logo">
-                  <a href="/">
+                  <Link to="/">
                     <img src={logo} alt="" />
-                  </a>
+                  </Link>
                 </div>
               </div>
               <div className="right-column">
@@ -50,35 +73,47 @@ const Header = () => {
                   </div>
 
                   {/* Main Menu --> */}
-                  <nav className="main-menu navbar-expand-md navbar-light">
+                  <nav className="main-menu navbar-expand-md navbar-light pr-5">
                     <div
                       className="collapse navbar-collapse show clearfix"
                       id="navbarSupportedContent"
                     >
                       <ul className="navigation">
                         <li className="dropdown">
-                          <a href="/">Home</a>
+                          <Link to="/">Home</Link>
                         </li>
                         <li className="dropdown">
-                          <a href="/about">About Us</a>
+                          <Link to="/about">About Us</Link>
                         </li>
                         <li className="dropdown">
-                          <a href="/service">Services</a>
+                          <Link to="/service">Services</Link>
                         </li>
 
                         <li>
-                          <a href="/contact">Contact Us</a>
+                          <Link to="/contact">Contact Us</Link>
                         </li>
                       </ul>
                     </div>
                   </nav>
                 </div>
-                <div className="search-btn"></div>
-                <div className="link-btn">
-                  <a href="/login" className="theme-btn btn-style-one">
-                    Login{" "}
-                  </a>
-                </div>
+
+                {isLogged ? (
+                  <div className="link-btn">
+                    <Link
+                      to="/"
+                      className="theme-btn btn-style-one"
+                      onClick={Logout}
+                    >
+                      Logout{" "}
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="link-btn">
+                    <Link to="/login" className="theme-btn btn-style-one">
+                      Login{" "}
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -94,9 +129,9 @@ const Header = () => {
                 {/* <!--Logo--> */}
                 <div className="logo-box">
                   <div className="logo">
-                    <a href="/">
+                    <Link to="/">
                       <img src={logo} alt="" />
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 <div className="right-column">
@@ -110,12 +145,23 @@ const Header = () => {
                     {/* <!-- Main Menu --> */}
                     <nav className="main-menu navbar-expand-md navbar-light"></nav>
                   </div>
-                  <div className="search-btn"></div>
-                  <div className="link-btn">
-                    <a href="/login" className="theme-btn btn-style-one">
-                      Login{" "}
-                    </a>
-                  </div>
+                  {isLogged ? (
+                    <div className="link-btn">
+                      <Link
+                        to="/"
+                        className="theme-btn btn-style-one"
+                        onClick={Logout}
+                      >
+                        Logout{" "}
+                      </Link>
+                    </div>
+                  ) : (
+                    <div className="link-btn">
+                      <Link to="/login" className="theme-btn btn-style-one">
+                        Login{" "}
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -133,9 +179,9 @@ const Header = () => {
 
           <nav className="menu-box">
             <div className="nav-logo">
-              <a href="/">
+              <Link to="/">
                 <img src={logo} alt="" title="" />
-              </a>
+              </Link>
             </div>
             <div className="menu-outer">
               {/* <!--Here Menu Will Come Automatically Via Javascript / Same Menu as in Header--> */}

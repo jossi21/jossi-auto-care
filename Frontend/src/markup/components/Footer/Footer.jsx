@@ -1,6 +1,6 @@
 import React from "react";
 // import logo
-import logo from "../../../assets/template_assets/Custom/logo.png";
+import logo from "../../../assets/template_assets/Custom/logo1.png";
 
 const Footer = () => {
   return (

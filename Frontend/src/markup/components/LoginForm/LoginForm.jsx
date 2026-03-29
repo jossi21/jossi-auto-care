@@ -65,34 +65,32 @@ const LoginForm = () => {
         // console.log(data);
         if (data.status === "success") {
           // console.log(data.employee_token);
-          if (data.employee_token) {
-            localStorage.setItem(
-              "employee",
-              JSON.stringify(data.employee_token),
-            );
+          if (data.data && data.data.employee_token) {
+            localStorage.setItem("employee", JSON.stringify(data.data));
           }
           if (location.pathname === "/login") {
+            setSuccessResponse(data.message);
             setTimeout(() => {
-              setSuccessResponse(data.message);
+              setLoading(false);
               window.location.replace("/");
             }, 2000);
           } else {
+            setLoading(false);
             window.location.replace();
           }
-          setLoading(false);
         } else {
+          setLoading(false);
           setTimeout(() => {
             setServerError(data.message);
           }, 3000);
-          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
+        setLoading(false);
         setTimeout(() => {
           setServerError(err.message);
         }, 3000);
-        setLoading(false);
       });
   };
   return (
@@ -122,6 +120,7 @@ const LoginForm = () => {
                     type="text"
                     name="email"
                     placeholder="Your Email"
+                    autoComplete="email"
                     className={emailErr ? classes.input__error : ""}
                     value={employee_email}
                     onChange={(e) => setEmployeeEmail(e.target.value)}
@@ -136,6 +135,7 @@ const LoginForm = () => {
                     type="password"
                     name="form_subject"
                     placeholder="Employee password"
+                    autoComplete="current-password"
                     className={passwordErr ? classes.input__error : ""}
                     value={employee_password}
                     onChange={(e) => setEmployeePassword(e.target.value)}
@@ -152,11 +152,7 @@ const LoginForm = () => {
                     data-loading-text="Please wait..."
                   >
                     {" "}
-                    {loading ? (
-                      <span>Please Wait...</span>
-                    ) : (
-                      <span>add employee</span>
-                    )}
+                    {loading ? <span>Please Wait...</span> : <span>Login</span>}
                   </button>
                 </div>
               </div>
