@@ -16,6 +16,7 @@ async function loginUser(req, res, next) {
     // console.log(req.body);
     //  store login data in to the variable
     let userData = req.body;
+
     // pass the email in to service login function
     const employee = await loginService.loginUser(userData);
     // console.log(employee);
@@ -35,12 +36,16 @@ async function loginUser(req, res, next) {
     };
     // generate the token
     const token = jwt.sign(payload, jwtSecret, { expiresIn: "24h" });
+    // put it in object form
+    const employeeToken = {
+      employee_token: token,
+    };
     // console.log(token);
     // success response
     res.status(200).json({
       status: employee.status,
       message: employee.message,
-      employee_token: token,
+      data: employeeToken,
     });
   } catch (error) {
     console.log(error);

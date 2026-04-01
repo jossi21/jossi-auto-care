@@ -92,5 +92,90 @@ async function getEmployeeByEmail(employee_email) {
   const rows5 = await conn.query(query, [employee_email]);
   return rows5;
 }
+
+// the function which get employees from the data base
+async function getAllEmployee() {
+  // the query
+  const query =
+    "SELECT employee.employee_id, employee.employee_email, employee_info.employee_first_name, employee_info.employee_last_name, employee_info.employee_phone, employee.active_employee, employee.added_date, employee_role.company_role_id, company_roles.company_role_name FROM employee JOIN employee_info ON employee.employee_id = employee_info.employee_id JOIN employee_role ON employee.employee_id = employee_role.employee_id JOIN company_roles ON employee_role.company_role_id = company_roles.company_role_id ORDER BY employee.employee_id DESC limit 15";
+  const rows = await conn.query(query);
+  return rows;
+}
+
+// get employee by it's id
+async function getEmployeeById(employee_id) {
+  const query = "SELECT * FROM employee WHERE employee.employee_id = ?";
+  const rows = await conn.query(query, [employee_id]);
+  return rows;
+}
+// the query used to update employee data
+async function updateEmployee(employee_id, updateData) {
+  // query used to update employee status
+  const query1 =
+    "UPDATE employee SET active_employee = ? WHERE employee_id = ?";
+  const rows = await conn.query(query1, [
+    updateData.active_employee,
+    employee_id,
+  ]);
+
+  // query used to update employee info table
+  const query2 =
+    "UPDATE employee_info SET employee_first_name = ?, employee_last_name = ?, employee_phone = ? WHERE employee_id = ? ";
+
+  const rows2 = await conn.query(query2, [
+    updateData.employee_first_name,
+    updateData.employee_last_name,
+    updateData.employee_phone,
+    employee_id,
+  ]);
+
+  // query used to update employee role
+  const query3 =
+    "UPDATE employee_role SET company_role_id = ? WHERE employee_id = ?";
+
+  const rows3 = await conn.query(query3, [
+    updateData.company_role_id,
+    employee_id,
+  ]);
+
+  return { success: "true" };
+}
+
+// the query which delete the employee
+async function deleteEmployee(employee_id) {
+  // delete from password table
+  const query1 = "DELETE FROM employee_pass WHERE employee_id = ?";
+
+  const rows1 = await conn.query(query1, [employee_id]);
+
+  // delete from role table
+  const query2 = "DELETE FROM employee_role WHERE employee_id = ?";
+
+  const row2 = await conn.query(query2, [employee_id]);
+
+  // delete from info table
+  const query3 = "DELETE FROM employee_info WHERE employee_id = ?";
+
+  const rows3 = await conn.query(query3, [employee_id]);
+
+  // delete from employee table
+  const query4 = "DELETE FROM employee_pass WHERE employee_id = ?";
+
+  const rows4 = await conn.query(query4, [employee_id]);
+
+  return {
+    status: "success",
+    message: "Employee deleted successfully",
+  };
+}
+
 // export the functions
-module.exports = { checkIfEmployeeExists, createEmployee, getEmployeeByEmail };
+module.exports = {
+  checkIfEmployeeExists,
+  createEmployee,
+  getEmployeeByEmail,
+  getAllEmployee,
+  getEmployeeById,
+  updateEmployee,
+  deleteEmployee,
+};
