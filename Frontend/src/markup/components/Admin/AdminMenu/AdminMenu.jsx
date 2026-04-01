@@ -12,19 +12,19 @@ const AdminMenu = () => {
         <div className={classes.adminmenu__inner__wrapper}>
           <Link to="/admin">Dashboard</Link>
           <hr />
-          <Link to="/orders">Orders</Link>
+          <Link to="/admin/orders">Orders</Link>
           <hr />
-          <Link to="/new-order">New order</Link>
-          <hr />
-          <Link to="/admin/add-employee">Add employee</Link>
+          <Link to="/admin/new-order">New order</Link>
           <hr />
           <Link to="/admin/employees">Employees</Link>
+          <hr />
+          <Link to="/admin/add-employee">Add employee</Link>
           <hr />
           <Link to="/admin/add-customer">Add customer</Link>
           <hr />
           <Link to="/admin/customers">Customers</Link>
           <hr />
-          <Link to="/services">Services </Link>
+          <Link to="/admin/services">Services </Link>
         </div>
       </div>
     </>

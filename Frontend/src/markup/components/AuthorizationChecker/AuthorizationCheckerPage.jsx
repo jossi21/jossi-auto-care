@@ -15,7 +15,7 @@ const AuthorizationCheckerPage = ({ roles, children }) => {
     loggedEmployee.then((res) => {
       // console.log("User role:", res.employee_role);
       // console.log("user token:", res.employee_token);
-      if (res.employee_token) {
+      if (res?.employee_token) {
         setIsLogged(true);
         // check the user role
         if (roles && roles.length > 0 && roles.includes(res.employee_role)) {

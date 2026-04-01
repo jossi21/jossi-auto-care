@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import iconBar from "../../../assets/template_assets/images/icons/icon-bar.png";
 import { useAuthContext } from "../../../context/AuthContext";
 import loginService from "../../../services/login.service";
-import getToken from "../../../utils/Auth";
 
 const Header = () => {
   // console.log(useAuthContext());
@@ -43,8 +42,8 @@ const Header = () => {
                 </div>
               ) : (
                 <div className="right-column">
-                  <div className="phone-number">
-                    Schedule Today :<strong>1800 456 7890</strong>
+                  <div className="phone-number px-5">
+                    <strong>Guest</strong>
                   </div>
                 </div>
               )}

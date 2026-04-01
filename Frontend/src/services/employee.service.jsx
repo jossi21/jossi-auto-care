@@ -1,19 +1,71 @@
-// import backend url
-const api_url = import.meta.env.VITE_API_URL;
-const AddEmployee = async (dataFromTheUser) => {
-  const requestOption = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(dataFromTheUser),
-  };
+// the function which fetch the data from the backend
 
-  // post the data on the back end database
-  const response = await fetch(`${api_url}/api/employee`, requestOption);
+// first import back end url
+const api_url = import.meta.env.VITE_API_URL;
+// console.log(api_url);
+
+const addNewEmployee = async (formData) => {
+  try {
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    };
+    const res = await fetch(`${api_url}/api/employee`, requestOptions);
+
+    // check if response is ok before parsing
+    if (!res.ok) {
+      const errorData = await res.json();
+      throw new Error(errorData.error || errorData.message);
+    }
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// fetch all employee
+const getAllEmployees = async () => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(),
+  };
+  const response = await fetch(`${api_url}/api/employees`, requestOptions);
   return response;
 };
 
-// export the function
-const employeeService = {
-  AddEmployee,
+// update employee
+const updateEmployee = async (updateData) => {
+  const requestOptions = {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updateData),
+  };
+
+  const response = await fetch(`${api_url}/api/employee`, requestOptions);
+  return response;
 };
+
+// delete employee
+const deleteEmployee = async (employee_id) => {
+  const requestOptions = {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+  };
+  const response = await fetch(
+    `${api_url}/api/employee/${employee_id}`,
+    requestOptions,
+  );
+
+  return response;
+};
+const employeeService = {
+  addNewEmployee,
+  getAllEmployees,
+  updateEmployee,
+  deleteEmployee,
+};
+
 export default employeeService;

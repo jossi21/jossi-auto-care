@@ -1,18 +1,16 @@
-// import the back end url from the evn
+// import the backend url
 const api_url = import.meta.env.VITE_API_URL;
 
-// define the login function
-const Login = async (loginDataFromTheUser) => {
-  const requestOption = {
+// the function
+const loginEmployee = async (formData) => {
+  const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(loginDataFromTheUser),
+    body: JSON.stringify(formData),
   };
 
-  console.log(requestOption.body);
-  //   fetch the data from the database
-  const response = await fetch(`${api_url}/api/employee/login`, requestOption);
-
+  const response = await fetch(`${api_url}/api/employee/login`, requestOptions);
+  //   console.log(response);
   return response;
 };
 
@@ -21,8 +19,6 @@ const logOut = async () => {
   // the method used to remove the token
   localStorage.removeItem("employee");
 };
-// export the function
-export default {
-  Login,
-  logOut,
-};
+const loginService = { loginEmployee, logOut };
+
+export default loginService;

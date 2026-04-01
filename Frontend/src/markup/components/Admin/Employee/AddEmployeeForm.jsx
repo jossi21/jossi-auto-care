@@ -1,6 +1,6 @@
 import React, { use, useState } from "react";
 import classes from "./AddEmployee.module.css";
-import employeeService from "../../../pages/Admin/services/employee.servicce";
+import employeeService from "../../../../services/employee.service";
 
 const AddEmployeeForm = () => {
   // define states that holed the input values
@@ -253,7 +253,6 @@ const AddEmployeeForm = () => {
                           <option value="1">Employee</option>
                           <option value="2">Manager</option>
                           <option value="3">Admin</option>
-                          <option value="4">Customer</option>
                         </select>
                         {companyRoleErr && (
                           <div className={classes.error__message}>
@@ -261,6 +260,7 @@ const AddEmployeeForm = () => {
                           </div>
                         )}
                       </div>
+                      {/* Password input */}
                       <div className="form-group col-md-12">
                         <input
                           type="password"

@@ -3,10 +3,10 @@ import React from "react";
 // import main banner image
 import bannerImage from "../../../assets/template_assets/Custom/banner/main_banner_2.jpg";
 // import image od oil and gear
-import oilImage from "../../../assets/template_assets/Custom/other images/oil.png";
-import gearImage from "../../../assets/template_assets/Custom/other images/gears.jpg";
+import oilImage from "../../../assets/template_assets/Custom/other_images/oil.png";
+import gearImage from "../../../assets/template_assets/Custom/other_images/gears.jpg";
 // import speed display
-import speedDisplay from "../../../assets/template_assets/Custom/other images/speed displayer.jpg";
+import speedDisplay from "../../../assets/template_assets/Custom/other_images/speed displayer.jpg";
 // import video intro image
 import videoIntoImage from "../../../assets/template_assets/Custom/video_intro_image/video_intro_image.jpg";
 

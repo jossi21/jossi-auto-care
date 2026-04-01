@@ -1,0 +1,59 @@
+.addEmployee_form {
+  width: 100%;
+  margin-bottom: 40px;
+  border-radius: 5px;
+}
+
+.addEmployee_form input,
+.addEmployee_form option {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-weight: 300;
+}
+.addEmployee_form input:focus {
+  outline: 1.5px solid #31da2b;
+}
+
+/* if the error happened  */
+.input__error {
+  outline: 1px solid #d93838;
+}
+
+.employee__outer__wrapper {
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.addEmployee_title {
+  margin-bottom: 0px !important;
+}
+
+.add_employee_role {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.error__message {
+  color: red;
+  font-size: 14px;
+  margin-top: 1px;
+  text-align: end;
+}
+
+/* server error response styling */
+.server__error__message {
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 1px 0px 10px;
+}
+
+/* Success response styling */
+.success__response__message {
+  color: rgb(14, 234, 14);
+  font-size: 16px;
+  font-weight: bold;
+  padding: 1px 0px 10px;
+}

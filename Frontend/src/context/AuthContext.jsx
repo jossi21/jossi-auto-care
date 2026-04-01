@@ -22,9 +22,9 @@ export const AuthProvider = ({ children }) => {
   // console.log("Logged employee data", loggedEmployee);
   useEffect(() => {
     loggedEmployee.then((res) => {
-      if (res.employee_token) {
+      if (res?.employee_token) {
         setIsLogged(true);
-        if (res.employee_role === 3) {
+        if (res?.employee_role === 3) {
           setIsAdmin(true);
         }
         setEmployee(res);

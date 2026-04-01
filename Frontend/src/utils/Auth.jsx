@@ -3,12 +3,12 @@ const getToken = async () => {
   const token = JSON.parse(localStorage.getItem("employee"));
 
   // console.log("Token: ", token);
-  if (token.employee_token) {
+  if (token?.employee_token) {
     const decodedToken = await decodeToken(token);
     // console.log("Decoded token: ", decodedToken);
     return {
-      employee_role: decodedToken.employee_role,
       employee_first_name: decodedToken.employee_first_name,
+      employee_role: decodedToken.employee_role,
       employee_token: token,
     };
   } else {

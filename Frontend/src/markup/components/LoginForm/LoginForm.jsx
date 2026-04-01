@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import classes from "./LoginForm.module.css";
-import loginService from "../../pages/Admin/services/login.service";
+import loginService from "../../../services/login.service";
 
 const LoginForm = () => {
   // define states that holed the input values
