@@ -10,7 +10,7 @@ import "./assets/template_assets/css/responsive.css";
 import "./assets/template_assets/css/color.css";
 
 // custom css
-import "./assets/styles/custom.css";
+import "./assets/styles/custom.module.css";
 
 function App() {
   return <Routers />;

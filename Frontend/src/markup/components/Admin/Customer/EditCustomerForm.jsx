@@ -1,35 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import customerService from "../../../../services/customer.services";
 import classes from "../../../../../src/assets/styles/custom.module.css";
-import employeeService from "../../../../services/employee.service";
-import { useLocation } from "react-router";
 
-const EditEmployeeForm = () => {
-  const location = useLocation();
-  // get employee data before editing
-  const employee = location.state?.employee;
-
-  // // Now you have the full employee object
-  // console.log("Employee data:", employeeData);
-
-  // console.log(employee);
+const EditCustomerForm = () => {
+  const { id } = useParams();
+  // console.log(id);
+  const navigate = useNavigate();
   // define states that holed the input values
-  const [employee_first_name, setEmployeeFirstName] = useState("");
-  const [employee_last_name, setEmployeeLastName] = useState("");
-  const [employee_phone, setEmployeePhone] = useState("");
-  const [company_role_id, setCompanyRoleID] = useState("");
+  const [customer, setCustomer] = useState([]);
+  const [customer_first_name, setCustomerFirstName] = useState("");
+  const [customer_last_name, setCustomerLastName] = useState("");
+  const [customer_phone_number, setCustomerPhone] = useState("");
   const [isActive, setIsActive] = useState("0");
+  // console.log(customer);
 
   // error handler states
   const [firstNameErr, setFirstNameErr] = useState("");
   const [lastNameErr, setLastNameErr] = useState("");
   const [phoneNumErr, setPhoneNumErr] = useState("");
-  const [companyRoleErr, setCompanyRoleErr] = useState("");
   const [successResponse, setSuccessResponse] = useState("");
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
-
   // the function handle the submission process
-  const UpdateEmployeeHandler = (e) => {
+  const UpdateCustomerHandler = (e) => {
     // prevent default behavior of the browser
     e.preventDefault();
 
@@ -37,17 +31,17 @@ const EditEmployeeForm = () => {
     let flag = true;
 
     // first name validation
-    if (!employee_first_name) {
+    if (!customer_first_name) {
       setFirstNameErr("First name required");
       flag = false;
-    } else if (employee_first_name.length < 3) {
+    } else if (customer_first_name.length < 3) {
       setFirstNameErr("The name must be more than 3 char");
       flag = false;
     } else {
       setFirstNameErr("");
     }
     // first name validation
-    if (!employee_last_name) {
+    if (!customer_last_name) {
       setLastNameErr("Last name required");
       flag = false;
     } else {
@@ -56,78 +50,77 @@ const EditEmployeeForm = () => {
 
     // Phone number validation
     const phoneRegex = /^(09|\+2519)\d{8}$/;
-    if (!employee_phone) {
+    if (!customer_phone_number) {
       setPhoneNumErr("Phone number required");
       flag = false;
-    } else if (typeof employee_phone !== "string") {
+    } else if (typeof customer_phone_number !== "string") {
       setPhoneNumErr("Phone number must be number");
       flag = false;
-    } else if (!phoneRegex.test(employee_phone)) {
+    } else if (!phoneRegex.test(customer_phone_number)) {
       setPhoneNumErr("Use format: 09xxxxxxxx or +2519xxxxxxxx");
       flag = false;
     } else {
       setPhoneNumErr("");
     }
 
-    // company role validation
-    if (!company_role_id) {
-      setCompanyRoleErr("Please select employee role");
-      flag = false;
-    } else {
-      setCompanyRoleErr("");
-    }
-
     if (!flag) {
       return;
     }
+
     const updateData = {
-      employee_id: employee?.employee_id,
-      employee_first_name,
-      employee_last_name,
-      employee_phone,
-      company_role_id: parseInt(company_role_id),
-      active_employee: isActive,
+      customer_id: customer.customer_id,
+      customer_first_name,
+      customer_last_name,
+      customer_phone_number,
+      active_customer_status: isActive,
     };
 
-    // console.log(updateData);
+    const updatedCustomer = customerService.updateCustomerData(updateData);
 
-    const updatedEmployee = employeeService.updateEmployee(updateData);
-
-    // console.log(updatedEmployee);
+    // console.log(updatedCustomer);
     setLoading(true);
-    updatedEmployee
+    updatedCustomer
       .then((res) => res.json())
       .then((data) => {
         // console.log(data);
-        if (data.error) {
+        if (!data) {
           setServerError(data.error);
           setLoading(false);
         } else {
-          setSuccessResponse(data.success);
+          setSuccessResponse(data.message);
           setServerError("");
-          // set time out and redirect to home page
           setTimeout(() => {
-            window.location.href = "/admin/employees";
+            navigate("/admin/customers");
             setSuccessResponse("");
             setLoading(false);
           }, 2000);
         }
       })
-
-      .catch((error) => {
-        const errorMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setTimeout(() => {
-          setServerError(errorMessage);
-        }, 3000);
-        setServerError("");
-        setLoading(false);
+      .catch((err) => {
+        console.log(err);
+        setServerError(err.error || err.message || "Something went wrong");
       });
   };
+  // const singleCustomer = customerService.singleCustomer(id);
+  // console.log(singleCustomer);
+  useEffect(() => {
+    customerService
+      .singleCustomer(id)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Failed to fetch: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (data.data && data.data.length > 0) {
+          setCustomer(data.data[0]);
+        } else {
+          setServerError("Customer not found");
+        }
+      })
+      .catch((err) => setServerError(err.message || "Something went wrong"));
+  }, [id]);
 
   return (
     <>
@@ -138,8 +131,8 @@ const EditEmployeeForm = () => {
         <div className="auto-container">
           <div className={`contact-title ${classes.addEmployee_title}`}>
             <h2>
-              Edit : <span>{employee?.employee_first_name}</span>{" "}
-              <span>{employee?.employee_last_name}</span>
+              Edit : <span>{customer?.customer_first_name}</span>{" "}
+              <span>{customer?.customer_last_name}</span>
             </h2>
           </div>
           <div className="row clearfix">
@@ -147,14 +140,14 @@ const EditEmployeeForm = () => {
             <div className="form-column col-lg-7">
               <div className="inner-column">
                 <h6 className="pt-3 fw-bold">
-                  Employee Email: {employee?.employee_email}
+                  Employee Email: {customer?.customer_email}
                 </h6>
                 {/* <!--Contact Form--> */}
                 <div className={classes.addEmployee_form}>
                   <form
                     method="post"
                     id="contact-form"
-                    onSubmit={UpdateEmployeeHandler}
+                    onSubmit={UpdateCustomerHandler}
                   >
                     {serverError ? (
                       <div className={classes.server__error__message}>
@@ -171,10 +164,10 @@ const EditEmployeeForm = () => {
                         <input
                           type="text"
                           name="first-name"
-                          placeholder="Employee first name"
+                          placeholder="Customer first name"
                           className={firstNameErr ? classes.input__error : ""}
-                          value={employee_first_name}
-                          onChange={(e) => setEmployeeFirstName(e.target.value)}
+                          value={customer_first_name}
+                          onChange={(e) => setCustomerFirstName(e.target.value)}
                         />
                         {firstNameErr && (
                           <div className={classes.error__message}>
@@ -187,10 +180,10 @@ const EditEmployeeForm = () => {
                         <input
                           type="text"
                           name="last-name"
-                          placeholder="Employee last name"
+                          placeholder="Customer last name"
                           className={lastNameErr ? classes.input__error : ""}
-                          value={employee_last_name}
-                          onChange={(e) => setEmployeeLastName(e.target.value)}
+                          value={customer_last_name}
+                          onChange={(e) => setCustomerLastName(e.target.value)}
                         />
                         {lastNameErr && (
                           <div className={classes.error__message}>
@@ -206,8 +199,8 @@ const EditEmployeeForm = () => {
                           name="phone-number"
                           placeholder="Employee phone "
                           className={phoneNumErr ? classes.input__error : ""}
-                          value={employee_phone}
-                          onChange={(e) => setEmployeePhone(e.target.value)}
+                          value={customer_phone_number}
+                          onChange={(e) => setCustomerPhone(e.target.value)}
                         />
                         {phoneNumErr && (
                           <div className={classes.error__message}>
@@ -215,25 +208,7 @@ const EditEmployeeForm = () => {
                           </div>
                         )}
                       </div>
-                      {/* role input  */}
-                      <div className={` form-group col-md-12 `}>
-                        <select
-                          name="role"
-                          className={`col-md-12 py-2 px-1 ${classes.add_employee_role}`}
-                          value={company_role_id}
-                          onChange={(e) => setCompanyRoleID(e.target.value)}
-                        >
-                          <option value="">Select a role</option>
-                          <option value="1">Employee</option>
-                          <option value="2">Manager</option>
-                          <option value="3">Admin</option>
-                        </select>
-                        {companyRoleErr && (
-                          <div className={classes.error__message}>
-                            {companyRoleErr}
-                          </div>
-                        )}
-                      </div>
+                      {/* status div */}
                       <div className="d-flex align-items-center gap-2 mb-3 ml-4 ">
                         <input
                           type="checkbox"
@@ -249,7 +224,7 @@ const EditEmployeeForm = () => {
                           }}
                         />
                         <span className="form-check-label fw-medium">
-                          active employee
+                          active customer
                         </span>
                       </div>
                       <div className="form-group col-md-12">
@@ -279,4 +254,4 @@ const EditEmployeeForm = () => {
   );
 };
 
-export default EditEmployeeForm;
+export default EditCustomerForm;

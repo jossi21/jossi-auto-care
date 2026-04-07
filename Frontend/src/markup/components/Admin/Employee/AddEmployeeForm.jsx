@@ -1,5 +1,5 @@
 import React, { use, useState } from "react";
-import classes from "./AddEmployee.module.css";
+import classes from "../../../../../src/assets/styles/custom.module.css";
 import employeeService from "../../../../services/employee.service";
 
 const AddEmployeeForm = () => {
@@ -105,7 +105,7 @@ const AddEmployeeForm = () => {
       employee_phone,
       company_role_id: parseInt(company_role_id),
       employee_password,
-      active_employee: 1,
+      active_employee,
     };
 
     // console.log(formData);
@@ -124,7 +124,7 @@ const AddEmployeeForm = () => {
           setServerError("");
           // set time out and redirect to home page
           setTimeout(() => {
-            window.location.href = "/";
+            window.location.href = "/admin/employees";
             setSuccessResponse("");
             setLoading(false);
           }, 2000);

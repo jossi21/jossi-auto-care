@@ -5,24 +5,13 @@ const api_url = import.meta.env.VITE_API_URL;
 // console.log(api_url);
 
 const addNewEmployee = async (formData) => {
-  try {
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    };
-    const res = await fetch(`${api_url}/api/employee`, requestOptions);
-
-    // check if response is ok before parsing
-    if (!res.ok) {
-      const errorData = await res.json();
-      throw new Error(errorData.error || errorData.message);
-    }
-    const data = await res.json();
-    return data;
-  } catch (error) {
-    throw error;
-  }
+  const requestOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+  };
+  const res = await fetch(`${api_url}/api/employee`, requestOptions);
+  return res;
 };
 
 // fetch all employee

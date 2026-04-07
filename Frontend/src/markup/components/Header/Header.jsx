@@ -1,15 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 // import the loge image
 import logo from "../../../assets/template_assets/Custom/logo1.png";
 import { Link } from "react-router-dom";
-// import icon bar
-import iconBar from "../../../assets/template_assets/images/icons/icon-bar.png";
 import { useAuthContext } from "../../../context/AuthContext";
 import loginService from "../../../services/login.service";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const Header = () => {
   // console.log(useAuthContext());
-  const { isLogged, setIsLogged, employee } = useAuthContext();
+  const { isLogged, setIsLogged, employee, isAdmin } = useAuthContext();
+
+  // define the state that handel the toggler
+  const [isOpen, setIsOpen] = useState(false);
+
+  // the function handel the toggler
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
   // console.log(auth);
   // console.log("Is logged:", isLogged);
   // console.log("Employee:", employee);
@@ -64,19 +71,24 @@ const Header = () => {
                 </div>
               </div>
               <div className="right-column">
-                {/* Nav Box--> */}
                 <div className="nav-outer">
-                  {/* Mobile Navigation Toggler--> */}
+                  {/* Mobile Navigation Toggler */}
                   <div className="mobile-nav-toggler">
-                    <img src={iconBar} alt="" />
+                    <button
+                      style={{ background: "none", border: "none" }}
+                      onClick={toggleMenu}
+                    >
+                      {isOpen ? <FaTimes size={30} /> : <FaBars size={30} />}
+                    </button>
                   </div>
 
-                  {/* Main Menu --> */}
-                  <nav className="main-menu navbar-expand-md navbar-light pr-5">
-                    <div
-                      className="collapse navbar-collapse show clearfix"
-                      id="navbarSupportedContent"
-                    >
+                  {/* Main Menu - show/hide based on isOpen */}
+                  <nav
+                    className={`main-menu navbar-expand-md navbar-light pr-5 ${
+                      isOpen ? "menu-open" : "menu-closed"
+                    }`}
+                  >
+                    <div className="collapse navbar-collapse clearfix">
                       <ul className="navigation">
                         <li className="dropdown">
                           <Link to="/">Home</Link>
@@ -87,32 +99,37 @@ const Header = () => {
                         <li className="dropdown">
                           <Link to="/service">Services</Link>
                         </li>
-
                         <li>
                           <Link to="/contact">Contact Us</Link>
+                        </li>
+                        <li>
+                          {isAdmin ? (
+                            <Link to="/admin">Admin</Link>
+                          ) : (
+                            <Link to="/">Employee</Link>
+                          )}
                         </li>
                       </ul>
                     </div>
                   </nav>
                 </div>
 
-                {isLogged ? (
-                  <div className="link-btn">
+                {/* Login/Logout Button */}
+                <div className="link-btn">
+                  {isLogged ? (
                     <Link
                       to="/"
                       className="theme-btn btn-style-one"
                       onClick={Logout}
                     >
-                      Logout{" "}
+                      Logout
                     </Link>
-                  </div>
-                ) : (
-                  <div className="link-btn">
+                  ) : (
                     <Link to="/login" className="theme-btn btn-style-one">
-                      Login{" "}
+                      Login
                     </Link>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </div>
           </div>
@@ -138,11 +155,20 @@ const Header = () => {
                   <div className="nav-outer">
                     {/* <!--Mobile Navigation Toggler--> */}
                     <div className="mobile-nav-toggler">
-                      <img src={iconBar} alt="" />
+                      <button
+                        style={{ background: "none", border: "none" }}
+                        onClick={toggleMenu}
+                      >
+                        {isOpen ? <FaTimes size={30} /> : <FaBars size={30} />}
+                      </button>
                     </div>
 
                     {/* <!-- Main Menu --> */}
-                    <nav className="main-menu navbar-expand-md navbar-light"></nav>
+                    <nav
+                      className={`main-menu navbar-expand-md navbar-light pr-5 ${
+                        isOpen ? "menu-open" : "menu-closed"
+                      }`}
+                    ></nav>
                   </div>
                   {isLogged ? (
                     <div className="link-btn">

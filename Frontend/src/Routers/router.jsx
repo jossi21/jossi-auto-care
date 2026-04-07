@@ -16,6 +16,11 @@ import Service from "../markup/pages/Service/Service";
 import Contact from "../markup/pages/Contact/Contact";
 import EmployeeList from "../markup/components/Admin/Employee/EmployeeList";
 import EditEmployee from "../markup/pages/Admin/employee/EditEmployee";
+import Customers from "../markup/pages/Admin/customer/Customers";
+import EditCustomer from "../markup/pages/Admin/customer/EditCustomer";
+import AdminLayout from "../markup/components/AdminLayout";
+import CustomerList from "../markup/components/Admin/Customer/CustomerList";
+import CustomerProfile from "../markup/components/Admin/Customer/CustomerProfile";
 const router = () => {
   return (
     <>
@@ -26,56 +31,17 @@ const router = () => {
         <Route path="/service" element={<Service />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
-        <Route
-          path="/admin"
-          element={
-            <AuthorizationCheckerPage roles={[3]}>
-              <Admin>
-                <AdminDashboard />
-              </Admin>
-            </AuthorizationCheckerPage>
-          }
-        />
-        <Route
-          path="/admin/add-employee"
-          element={
-            <AuthorizationCheckerPage roles={[3]}>
-              <Admin>
-                <AddEmployee />
-              </Admin>
-            </AuthorizationCheckerPage>
-          }
-        />
-        <Route
-          path="/admin/employees"
-          element={
-            <AuthorizationCheckerPage roles={[3]}>
-              <Admin>
-                <EmployeeList />
-              </Admin>
-            </AuthorizationCheckerPage>
-          }
-        />
-        <Route
-          path="/admin/employee/edit/:employeeI"
-          element={
-            <AuthorizationCheckerPage roles={[3]}>
-              <Admin>
-                <EditEmployee />
-              </Admin>
-            </AuthorizationCheckerPage>
-          }
-        />
-        <Route
-          path="/admin/add-customer"
-          element={
-            <AuthorizationCheckerPage roles={[2, 3]}>
-              <Admin>
-                <AddCustomer />
-              </Admin>
-            </AuthorizationCheckerPage>
-          }
-        />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="employees" element={<EmployeeList />} />
+          <Route path="add-employee" element={<AddEmployee />} />
+          <Route path="employees/:employeeId" element={<EditEmployee />} />
+          <Route path="customers" element={<Customers />} />
+          <Route path="add-customer" element={<AddCustomer />} />
+          <Route path="customers/:id" element={<EditCustomer />} />
+          <Route path="customer/profile" element={<CustomerProfile />} />
+        </Route>
+
         <Route
           path="/add-order"
           element={

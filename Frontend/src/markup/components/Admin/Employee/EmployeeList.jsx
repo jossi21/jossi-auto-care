@@ -4,12 +4,14 @@ import { Table } from "react-bootstrap";
 import { format } from "date-fns";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import Spinner from "../../Spinner";
 
 const EmployeeList = () => {
   const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
   const [apiErr, setApiErr] = useState(false);
   const [apiErrMessage, setApiErrMessage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   //   console.log(employee);
 
   // // use the context
@@ -18,6 +20,8 @@ const EmployeeList = () => {
   const allEmployee = employeeService.getAllEmployees();
   // console.log(allEmployee);
   useEffect(() => {
+    setIsLoading(true);
+    setApiErr(false);
     allEmployee
       .then((res) => {
         //   console.log(res);
@@ -30,6 +34,7 @@ const EmployeeList = () => {
           } else {
             setApiErrMessage("Please try again");
           }
+          setIsLoading(false);
         }
         return res.json();
       })
@@ -38,16 +43,18 @@ const EmployeeList = () => {
           // console.log(data.contacts);
           setEmployees(data.contacts);
         }
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
         setApiErrMessage("Something went wrong");
+        setIsLoading(false);
       });
   }, []);
 
   // edit handler function
   const EditHandler = (employee) => {
-    navigate(`/admin/employee/edit/${employee.employee_id}`, {
+    navigate(`employees/${employee.employee_id}`, {
       state: { employee: employee },
     });
   };
@@ -87,51 +94,75 @@ const EmployeeList = () => {
             <div className="contact-title">
               <h2>Employees</h2>
             </div>
-            <Table striped bordered hover>
-              <thead>
-                <tr>
-                  <th>Active </th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Added Date</th>
-                  <th>Role</th>
-                  <th>Edit/Delete</th>
-                </tr>
-              </thead>
-              <tbody>
-                {employees.map((employee) => (
-                  <tr key={employee.employee_id}>
-                    <td>{employee.active_employee ? "Yes" : "No"}</td>
-                    <td>{employee.employee_first_name}</td>
-                    <td>{employee.employee_last_name}</td>
-                    <td>{employee.employee_email}</td>
-                    <td>{employee.employee_phone}</td>
-                    <td>
-                      {format(
-                        new Date(employee.added_date),
-                        "MM - dd - yyyy || kk:mm",
-                      )}
-                    </td>
-                    <td>{employee.company_role_name}</td>
-                    <td>
-                      <div className="edit-delete-icons text-center">
-                        <button onClick={() => EditHandler(employee)}>
-                          <FaEdit />
-                        </button>{" "}
-                        <span className="px-3">|</span>
-                        <button
-                          onClick={() => DeleteEmployee(employee.employee_id)}
-                        >
-                          <FaTrash size={17} />
-                        </button>
-                      </div>
-                    </td>
+            {isLoading ? (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Spinner isLoading={isLoading} />
+                <span style={{ marginTop: "10px", fontWeight: "bolder" }}>
+                  Loading Employees...
+                </span>
+              </div>
+            ) : (
+              <Table striped bordered hover>
+                <thead>
+                  <tr>
+                    <th>Active </th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Added Date</th>
+                    <th>Role</th>
+                    <th>Edit/Delete</th>
                   </tr>
-                ))}
-              </tbody>
-            </Table>
+                </thead>
+                <tbody>
+                  {employees.map((employee) => (
+                    <tr key={employee.employee_id}>
+                      <td>{employee.active_employee ? "Yes" : "No"}</td>
+                      <td>{employee.employee_first_name}</td>
+                      <td>{employee.employee_last_name}</td>
+                      <td>{employee.employee_email}</td>
+                      <td>{employee.employee_phone}</td>
+                      <td>
+                        {format(
+                          new Date(employee.added_date),
+                          "MM - dd - yyyy || kk:mm",
+                        )}
+                      </td>
+                      <td>{employee.company_role_name}</td>
+                      <td>
+                        <div className="edit-delete-icons text-center">
+                          <button
+                            style={{ background: "none", border: "none" }}
+                            onClick={() =>
+                              navigate(
+                                `/admin/employees/${employee.employee_id}`,
+                                { state: { employee } },
+                              )
+                            }
+                          >
+                            <FaEdit style={{ width: "35px" }} />
+                          </button>{" "}
+                          <span className="px-3">|</span>
+                          <button
+                            style={{ background: "none", border: "none" }}
+                            onClick={() => DeleteEmployee(employee.employee_id)}
+                          >
+                            <FaTrash style={{ width: "35px" }} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            )}
           </div>
         </section>
       )}

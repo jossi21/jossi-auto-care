@@ -1,53 +1,56 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
 import classes from "../../../../../src/assets/styles/custom.module.css";
-import employeeService from "../../../../services/employee.service";
-import { useLocation } from "react-router";
+import customerService from "../../../../services/customer.services";
 
-const EditEmployeeForm = () => {
-  const location = useLocation();
-  // get employee data before editing
-  const employee = location.state?.employee;
-
-  // // Now you have the full employee object
-  // console.log("Employee data:", employeeData);
-
-  // console.log(employee);
+const AddCustomerForm = () => {
   // define states that holed the input values
-  const [employee_first_name, setEmployeeFirstName] = useState("");
-  const [employee_last_name, setEmployeeLastName] = useState("");
-  const [employee_phone, setEmployeePhone] = useState("");
-  const [company_role_id, setCompanyRoleID] = useState("");
-  const [isActive, setIsActive] = useState("0");
+  const [customer_email, setCustomerEmail] = useState("");
+  const [customer_first_name, setCustomerFirstName] = useState("");
+  const [customer_last_name, setCustomerLastName] = useState("");
+  const [customer_phone_number, setCustomerPhone] = useState("");
+  const [active_customer_status, setActiveCustomer] = useState(1);
 
   // error handler states
+  const [emailErr, setEmailErr] = useState("");
   const [firstNameErr, setFirstNameErr] = useState("");
   const [lastNameErr, setLastNameErr] = useState("");
   const [phoneNumErr, setPhoneNumErr] = useState("");
-  const [companyRoleErr, setCompanyRoleErr] = useState("");
   const [successResponse, setSuccessResponse] = useState("");
   const [serverError, setServerError] = useState("");
   const [loading, setLoading] = useState(false);
 
   // the function handle the submission process
-  const UpdateEmployeeHandler = (e) => {
+  const addEmployeeHandler = (e) => {
     // prevent default behavior of the browser
     e.preventDefault();
 
     // Here is the validation process
     let flag = true;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+    // email validation
+    if (!customer_email) {
+      setEmailErr("email address required");
+      flag = false;
+    } else if (!emailRegex.test(customer_email)) {
+      setEmailErr("Allowed email (example@gmail.com)");
+      flag = false;
+    } else {
+      setEmailErr("");
+    }
 
     // first name validation
-    if (!employee_first_name) {
+    if (!customer_first_name) {
       setFirstNameErr("First name required");
       flag = false;
-    } else if (employee_first_name.length < 3) {
+    } else if (customer_first_name.length < 3) {
       setFirstNameErr("The name must be more than 3 char");
       flag = false;
     } else {
       setFirstNameErr("");
     }
     // first name validation
-    if (!employee_last_name) {
+    if (!customer_last_name) {
       setLastNameErr("Last name required");
       flag = false;
     } else {
@@ -56,79 +59,55 @@ const EditEmployeeForm = () => {
 
     // Phone number validation
     const phoneRegex = /^(09|\+2519)\d{8}$/;
-    if (!employee_phone) {
+    if (!customer_phone_number) {
       setPhoneNumErr("Phone number required");
       flag = false;
-    } else if (typeof employee_phone !== "string") {
+    } else if (typeof customer_email !== "string") {
       setPhoneNumErr("Phone number must be number");
       flag = false;
-    } else if (!phoneRegex.test(employee_phone)) {
+    } else if (!phoneRegex.test(customer_phone_number)) {
       setPhoneNumErr("Use format: 09xxxxxxxx or +2519xxxxxxxx");
       flag = false;
     } else {
       setPhoneNumErr("");
     }
-
-    // company role validation
-    if (!company_role_id) {
-      setCompanyRoleErr("Please select employee role");
-      flag = false;
-    } else {
-      setCompanyRoleErr("");
-    }
-
     if (!flag) {
       return;
     }
-    const updateData = {
-      employee_id: employee?.employee_id,
-      employee_first_name,
-      employee_last_name,
-      employee_phone,
-      company_role_id: parseInt(company_role_id),
-      active_employee: isActive,
+    const customerData = {
+      customer_email,
+      customer_first_name,
+      customer_last_name,
+      customer_phone_number,
+      active_customer_status,
     };
 
-    // console.log(updateData);
+    console.log(customerData);
 
-    const updatedEmployee = employeeService.updateEmployee(updateData);
-
-    // console.log(updatedEmployee);
+    // get the response data from the backend
+    const newCustomer = customerService.addCustomer(customerData);
     setLoading(true);
-    updatedEmployee
+    console.log(newCustomer);
+    newCustomer
       .then((res) => res.json())
       .then((data) => {
-        // console.log(data);
         if (data.error) {
           setServerError(data.error);
           setLoading(false);
         } else {
-          setSuccessResponse(data.success);
-          setServerError("");
-          // set time out and redirect to home page
+          (setSuccessResponse(data.message), setServerError(""));
           setTimeout(() => {
-            window.location.href = "/admin/employees";
-            setSuccessResponse("");
             setLoading(false);
+            window.location.href = "/admin/customers";
           }, 2000);
         }
       })
-
       .catch((error) => {
-        const errorMessage =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-        setTimeout(() => {
-          setServerError(errorMessage);
-        }, 3000);
-        setServerError("");
+        setServerError(error.error);
+        setSuccessResponse("");
         setLoading(false);
       });
   };
-
   return (
     <>
       {/* <!--login Section--> */}
@@ -137,24 +116,18 @@ const EditEmployeeForm = () => {
       >
         <div className="auto-container">
           <div className={`contact-title ${classes.addEmployee_title}`}>
-            <h2>
-              Edit : <span>{employee?.employee_first_name}</span>{" "}
-              <span>{employee?.employee_last_name}</span>
-            </h2>
+            <h2>Add a new customer</h2>
           </div>
           <div className="row clearfix">
             {/* <!--Form Column--> */}
             <div className="form-column col-lg-7">
               <div className="inner-column">
-                <h6 className="pt-3 fw-bold">
-                  Employee Email: {employee?.employee_email}
-                </h6>
                 {/* <!--Contact Form--> */}
                 <div className={classes.addEmployee_form}>
                   <form
                     method="post"
                     id="contact-form"
-                    onSubmit={UpdateEmployeeHandler}
+                    onSubmit={addEmployeeHandler}
                   >
                     {serverError ? (
                       <div className={classes.server__error__message}>
@@ -166,6 +139,22 @@ const EditEmployeeForm = () => {
                       </div>
                     )}
                     <div className="row clearfix">
+                      {/* email input */}
+                      <div className="form-group col-md-12">
+                        <input
+                          type="text"
+                          name="email"
+                          placeholder="Your Email"
+                          className={emailErr ? classes.input__error : ""}
+                          value={customer_email}
+                          onChange={(e) => setCustomerEmail(e.target.value)}
+                        />
+                        {emailErr && (
+                          <div className={classes.error__message}>
+                            {emailErr}
+                          </div>
+                        )}
+                      </div>
                       {/* first name input */}
                       <div className="form-group col-md-12">
                         <input
@@ -173,8 +162,8 @@ const EditEmployeeForm = () => {
                           name="first-name"
                           placeholder="Employee first name"
                           className={firstNameErr ? classes.input__error : ""}
-                          value={employee_first_name}
-                          onChange={(e) => setEmployeeFirstName(e.target.value)}
+                          value={customer_first_name}
+                          onChange={(e) => setCustomerFirstName(e.target.value)}
                         />
                         {firstNameErr && (
                           <div className={classes.error__message}>
@@ -189,8 +178,8 @@ const EditEmployeeForm = () => {
                           name="last-name"
                           placeholder="Employee last name"
                           className={lastNameErr ? classes.input__error : ""}
-                          value={employee_last_name}
-                          onChange={(e) => setEmployeeLastName(e.target.value)}
+                          value={customer_last_name}
+                          onChange={(e) => setCustomerLastName(e.target.value)}
                         />
                         {lastNameErr && (
                           <div className={classes.error__message}>
@@ -206,8 +195,8 @@ const EditEmployeeForm = () => {
                           name="phone-number"
                           placeholder="Employee phone "
                           className={phoneNumErr ? classes.input__error : ""}
-                          value={employee_phone}
-                          onChange={(e) => setEmployeePhone(e.target.value)}
+                          value={customer_phone_number}
+                          onChange={(e) => setCustomerPhone(e.target.value)}
                         />
                         {phoneNumErr && (
                           <div className={classes.error__message}>
@@ -215,54 +204,18 @@ const EditEmployeeForm = () => {
                           </div>
                         )}
                       </div>
-                      {/* role input  */}
-                      <div className={` form-group col-md-12 `}>
-                        <select
-                          name="role"
-                          className={`col-md-12 py-2 px-1 ${classes.add_employee_role}`}
-                          value={company_role_id}
-                          onChange={(e) => setCompanyRoleID(e.target.value)}
-                        >
-                          <option value="">Select a role</option>
-                          <option value="1">Employee</option>
-                          <option value="2">Manager</option>
-                          <option value="3">Admin</option>
-                        </select>
-                        {companyRoleErr && (
-                          <div className={classes.error__message}>
-                            {companyRoleErr}
-                          </div>
-                        )}
-                      </div>
-                      <div className="d-flex align-items-center gap-2 mb-3 ml-4 ">
-                        <input
-                          type="checkbox"
-                          className="form-check-input"
-                          checked={isActive === "1"}
-                          onChange={(e) =>
-                            setIsActive(e.target.checked ? "1" : "0")
-                          }
-                          style={{
-                            width: "16px",
-                            height: "16px",
-                            cursor: "pointer",
-                          }}
-                        />
-                        <span className="form-check-label fw-medium">
-                          active employee
-                        </span>
-                      </div>
                       <div className="form-group col-md-12">
                         <button
                           className="theme-btn btn-style-one"
                           type="submit"
                           data-loading-text="Please wait..."
+                          disabled={loading}
                         >
                           {" "}
                           {loading ? (
                             <span>Please Wait...</span>
                           ) : (
-                            <span>Update</span>
+                            <span>add Customer</span>
                           )}
                         </button>
                       </div>
@@ -279,4 +232,4 @@ const EditEmployeeForm = () => {
   );
 };
 
-export default EditEmployeeForm;
+export default AddCustomerForm;
