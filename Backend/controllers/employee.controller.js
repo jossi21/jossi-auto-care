@@ -45,8 +45,7 @@ async function getAllEmployee(req, res, next) {
     if (!allEmployee || allEmployee.length === 0) {
       return res.status(400).json({
         success: true,
-        message: "Failed to get all employee",
-        contacts: [],
+        error: "Failed to get all employee",
       });
     }
 
