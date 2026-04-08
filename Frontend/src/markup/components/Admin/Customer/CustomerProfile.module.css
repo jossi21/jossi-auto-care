@@ -1,0 +1,96 @@
+.customer__profile {
+  background-color: #31da2b;
+  width: 2px;
+}
+
+.customer__info_div,
+.customer__orders_div,
+.customer__cars_div {
+  width: 100px;
+  height: 100px;
+  background-color: rgb(235, 6, 6);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 40px;
+}
+.customer__info_div {
+  margin-bottom: 100px;
+}
+
+.customer__name {
+  color: rgb(45, 45, 138);
+}
+
+.vehicle__not_found {
+  width: 100%;
+  background-color: rgba(229, 230, 233, 0.937);
+}
+
+/* Add vehicle form */
+.add__vehicle__section {
+  position: relative;
+}
+
+.remove__form__icon {
+  position: absolute;
+  right: 375px;
+  top: -20px;
+}
+.form__section {
+  padding: 12px !important ;
+  box-shadow: 0 10px 12px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  width: 500px;
+}
+.addVehicle_form {
+  width: 100%;
+  margin-bottom: 40px;
+  border-radius: 5px;
+}
+
+.addVehicle_form input {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-weight: 300;
+}
+
+.addVehicle_form input:focus {
+  outline: 1.5px solid #31da2b;
+}
+
+/* if the error happened  */
+.input__error {
+  outline: 1px solid #d93838;
+}
+
+.error__message {
+  color: red;
+  font-size: 14px;
+  margin-top: 1px;
+  text-align: end;
+}
+
+/* server error response styling */
+.server__error__message {
+  color: red;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 1px 0px 10px;
+}
+
+/* Success response styling */
+.success__response__message {
+  color: rgb(14, 234, 14);
+  font-size: 16px;
+  font-weight: bold;
+  padding: 1px 0px 10px;
+}
+
+/* Car info section */
+.car_info_section {
+  padding: 10px 0 !important;
+}

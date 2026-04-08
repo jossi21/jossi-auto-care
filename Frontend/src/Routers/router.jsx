@@ -21,6 +21,7 @@ import EditCustomer from "../markup/pages/Admin/customer/EditCustomer";
 import AdminLayout from "../markup/components/AdminLayout";
 import CustomerList from "../markup/components/Admin/Customer/CustomerList";
 import CustomerProfile from "../markup/components/Admin/Customer/CustomerProfile";
+import EditVehicle from "../markup/components/Admin/vehicle/EditVehicle";
 const router = () => {
   return (
     <>
@@ -39,7 +40,8 @@ const router = () => {
           <Route path="customers" element={<Customers />} />
           <Route path="add-customer" element={<AddCustomer />} />
           <Route path="customers/:id" element={<EditCustomer />} />
-          <Route path="customer/profile" element={<CustomerProfile />} />
+          <Route path="customer/profile/:id" element={<CustomerProfile />} />
+          <Route path="customer/profile/edit/:id" element={<EditVehicle />} />
         </Route>
 
         <Route

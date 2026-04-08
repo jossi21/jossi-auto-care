@@ -252,7 +252,9 @@ const CustomerList = () => {
                             </button>
                             <button
                               onClick={() =>
-                                navigate("/admin/customer/profile")
+                                navigate(
+                                  `/admin/customer/profile/${customer?.customer_id}`,
+                                )
                               }
                               style={{
                                 background: "none",
