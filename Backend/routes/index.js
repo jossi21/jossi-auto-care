@@ -19,6 +19,9 @@ const customerRouter = require("./customer.route");
 // import vehicle router
 const vehicleRouter = require("./vehicle.route");
 
+// import service router
+const serviceRouter = require("./service.route");
+
 //***************
 // add the install router to the main router
 //  */
@@ -36,5 +39,8 @@ router.use(customerRouter);
 
 // use vehicle router
 router.use(vehicleRouter);
+
+// use service router
+router.use(serviceRouter);
 // export the router
 module.exports = router;
