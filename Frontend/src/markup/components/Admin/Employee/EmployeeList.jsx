@@ -52,13 +52,6 @@ const EmployeeList = () => {
       });
   }, []);
 
-  // edit handler function
-  const EditHandler = (employee) => {
-    navigate(`employees/${employee.employee_id}`, {
-      state: { employee: employee },
-    });
-  };
-
   // delete employee handler
   const DeleteEmployee = async (employeeId) => {
     if (window.confirm("Are you sure you want to delete this employee")) {

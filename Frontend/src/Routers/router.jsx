@@ -10,7 +10,6 @@ import AuthorizationCheckerPage from "../markup/components/AuthorizationChecker/
 import AddCustomer from "../markup/pages/Admin/customer/AddCustomer";
 import AddOrder from "../markup/pages/Admin/order/AddOrder";
 import AdminDashboard from "../markup/pages/Admin/adminDashbor/AdminDashboard";
-import Admin from "../markup/pages/Admin/Admin";
 import About from "../markup/pages/About/About";
 import Service from "../markup/pages/Service/Service";
 import Contact from "../markup/pages/Contact/Contact";
@@ -19,9 +18,10 @@ import EditEmployee from "../markup/pages/Admin/employee/EditEmployee";
 import Customers from "../markup/pages/Admin/customer/Customers";
 import EditCustomer from "../markup/pages/Admin/customer/EditCustomer";
 import AdminLayout from "../markup/components/AdminLayout";
-import CustomerList from "../markup/components/Admin/Customer/CustomerList";
 import CustomerProfile from "../markup/components/Admin/Customer/CustomerProfile";
 import EditVehicle from "../markup/components/Admin/vehicle/EditVehicle";
+import Services from "../markup/pages/Admin/service/Services";
+import EditService from "../markup/components/Admin/service/EditService";
 const router = () => {
   return (
     <>
@@ -42,6 +42,8 @@ const router = () => {
           <Route path="customers/:id" element={<EditCustomer />} />
           <Route path="customer/profile/:id" element={<CustomerProfile />} />
           <Route path="customer/profile/edit/:id" element={<EditVehicle />} />
+          <Route path="services" element={<Services />} />
+          <Route path="services/edit/:id" element={<EditService />} />
         </Route>
 
         <Route

@@ -41,7 +41,7 @@ const VehicleCard = ({ vehicles }) => {
                         Model: {vehicle?.vehicle_model}
                       </h4>
                     </div>
-                    <div className="d-flex justify-content-around align-items-start mb-3">
+                    <div className="d-flex justify-content-between align-items-start mb-3">
                       <div>
                         <div>
                           <span className="fw-bold pr-1">Year:</span>{" "}

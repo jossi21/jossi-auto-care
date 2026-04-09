@@ -19,7 +19,6 @@ const CustomerProfile = () => {
   // console.log(vehicles);
   // toggler effect
   const [isShow, setIsShow] = useState(false);
-  const [successResponse, setSuccessResponse] = useState("");
   const [serverError, setServerError] = useState("");
   const [isLoading, setLoading] = useState(false);
 

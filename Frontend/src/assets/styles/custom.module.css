@@ -12,6 +12,15 @@ option {
   border-radius: 4px;
   font-weight: 300;
 }
+/* text area */
+.addEmployee_form textarea {
+  width: 100%;
+  padding: 5px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-weight: 300;
+  min-height: 120px;
+}
 .addEmployee_form input:focus {
   outline: 1.5px solid #31da2b;
 }
@@ -22,8 +31,8 @@ option {
 }
 
 .employee__outer__wrapper {
-  padding: 0;
-  margin-bottom: 0;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
 }
 
 .addEmployee_title {
@@ -56,4 +65,18 @@ option {
   font-size: 16px;
   font-weight: bold;
   padding: 1px 0px 10px;
+}
+
+/* ******************************
+custom background section styling
+
+*********************************/
+.custom_bg_section {
+  background: #fefcfc;
+  box-shadow: 0 10px 12px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+}
+
+.service__title {
+  color: rgb(45, 45, 138);
 }
