@@ -11,8 +11,13 @@ const vehicleController = require("../controllers/vehicle.controller");
 router.post("/api/vehicle", vehicleController.addVehicle);
 
 // get vehicle router
-router.get("/api/vehicle/:id", vehicleController.getSingleVehicle);
+router.get(
+  "/api/vehicles/:customer_id",
+  vehicleController.getVehicleByCustomerId,
+);
 
+//  get vehicle by its id
+router.get("/api/vehicle/:vehicle_id", vehicleController.getVehicleByVehicleID);
 // update vehicle router
 router.put("/api/vehicle", vehicleController.updateVehicle);
 

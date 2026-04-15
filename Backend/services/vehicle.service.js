@@ -31,15 +31,22 @@ async function addVehicle(vehicleData) {
   };
 }
 
-// the function get the single vehicle by it's id
-async function getSingleVehicle(id) {
+// the function get the single vehicle by customer id
+async function getVehicleByCustomerId(customer_id) {
   const query =
     "SELECT * FROM customer_vehicle_info INNER JOIN customer_identifier ON customer_identifier.customer_id = customer_vehicle_info.customer_id WHERE customer_identifier.customer_id = ? ";
 
-  const rows = await conn.query(query, [id]);
+  const rows = await conn.query(query, [customer_id]);
   return rows;
 }
 
+// the function get the single vehicle by vehicle id
+async function getVehicleByVehicleID(vehicle_id) {
+  const query = "SELECT * FROM customer_vehicle_info WHERE vehicle_id = ? ";
+
+  const rows = await conn.query(query, [vehicle_id]);
+  return rows;
+}
 // the function execute update vehicle query
 async function updateVehicle(vehicleID, updateVehicle) {
   const query =
@@ -65,6 +72,7 @@ async function updateVehicle(vehicleID, updateVehicle) {
 module.exports = {
   checkIfVehicleExist,
   addVehicle,
-  getSingleVehicle,
+  getVehicleByCustomerId,
+  getVehicleByVehicleID,
   updateVehicle,
 };

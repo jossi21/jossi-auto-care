@@ -67,7 +67,7 @@ async function addCustomer(customerData) {
 }
 
 // the function which execute the sql query
-async function getAllCustomers(page = 1, limit = 5) {
+async function getAllCustomers(page = 1, limit = 10) {
   try {
     // here it the math to calculate the records to skip
     const offset = (page - 1) * limit;

@@ -37,14 +37,40 @@ async function addVehicle(req, res) {
 }
 
 // get single vehicle
-async function getSingleVehicle(req, res) {
+async function getVehicleByCustomerId(req, res) {
   try {
-    const { id } = req.params;
-    const vehicleInfo = await vehicleService.getSingleVehicle(id);
+    const { customer_id } = req.params;
+    const vehicleInfo =
+      await vehicleService.getVehicleByCustomerId(customer_id);
     if (!vehicleInfo && vehicleInfo.length === 0) {
       return res.status(402).json({
         status: "fail",
         error: "Vehicle data couldn't find with this customer ID",
+      });
+    }
+    res.status(200).json({
+      status: "success",
+      message: "Vehicle data fetched successfully",
+      data: vehicleInfo,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      status: "fail",
+      error: "Something went wrong",
+    });
+  }
+}
+
+// get single vehicle by its id
+async function getVehicleByVehicleID(req, res) {
+  try {
+    const { vehicle_id } = req.params;
+    const vehicleInfo = await vehicleService.getVehicleByVehicleID(vehicle_id);
+    if (!vehicleInfo && vehicleInfo.length === 0) {
+      return res.status(402).json({
+        status: "fail",
+        error: "Vehicle data couldn't find with this vehicle ID",
       });
     }
     res.status(200).json({
@@ -99,6 +125,7 @@ async function updateVehicle(req, res) {
 
 module.exports = {
   addVehicle,
-  getSingleVehicle,
+  getVehicleByCustomerId,
+  getVehicleByVehicleID,
   updateVehicle,
 };

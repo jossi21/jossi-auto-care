@@ -44,11 +44,11 @@ async function getAllCustomers(req, res) {
   try {
     // get the page and limit
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+    const limit = parseInt(req.query.limit) || 10;
 
     // validate the parse page and limit
     const validPage = page > 0 ? page : 1;
-    const validLimit = limit > 0 && limit <= 100 ? limit : 5;
+    const validLimit = limit > 0 && limit <= 100 ? limit : 10;
     const customerData = await customerService.getAllCustomers(
       validPage,
       validLimit,
