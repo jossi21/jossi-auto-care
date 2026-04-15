@@ -9,7 +9,6 @@
   "author": "Yosef",
   "license": "ISC",
   "dependencies": {
-    "@prisma/client": "^6.19.0",
     "bcrypt": "^6.0.0",
     "cors": "^2.8.6",
     "dompurify": "^3.3.0",
@@ -20,7 +19,6 @@
     "jsdom": "^27.2.0",
     "jsonwebtoken": "^9.0.3",
     "mysql2": "^3.20.0",
-    "prisma": "^6.19.0",
     "sanitize": "^2.1.2",
     "sanitize-html": "^2.17.0"
   }
