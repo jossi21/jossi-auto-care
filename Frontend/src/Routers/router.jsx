@@ -22,6 +22,12 @@ import CustomerProfile from "../markup/components/Admin/Customer/CustomerProfile
 import EditVehicle from "../markup/components/Admin/vehicle/EditVehicle";
 import Services from "../markup/pages/Admin/service/Services";
 import EditService from "../markup/components/Admin/service/EditService";
+import OrderList from "../markup/pages/Admin/order/OrderList";
+import OrderCard from "../markup/components/Admin/orders/OrderCard";
+import SearchCustomer from "../markup/components/Admin/orders/SearchCustomer";
+import Order from "../markup/pages/Admin/order/Order";
+import EditOrder from "../markup/pages/Admin/order/EditOrder";
+import OrderProfile from "../markup/pages/Admin/order/OrderProfile";
 const router = () => {
   return (
     <>
@@ -34,23 +40,42 @@ const router = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
+          {/* employees router */}
           <Route path="employees" element={<EmployeeList />} />
           <Route path="add-employee" element={<AddEmployee />} />
           <Route path="employees/:employeeId" element={<EditEmployee />} />
+          {/* customers router */}
           <Route path="customers" element={<Customers />} />
           <Route path="add-customer" element={<AddCustomer />} />
           <Route path="customers/:id" element={<EditCustomer />} />
           <Route path="customer/profile/:id" element={<CustomerProfile />} />
           <Route path="customer/profile/edit/:id" element={<EditVehicle />} />
+          {/* services router */}
           <Route path="services" element={<Services />} />
           <Route path="services/edit/:id" element={<EditService />} />
+          {/* orders router */}
+          <Route path="new-order" element={<SearchCustomer />} />
+          <Route path="orders/:customer_id" element={<OrderCard />} />
+          <Route
+            path="orders/:customer_id/services/:vehicle_id"
+            element={<Order />}
+          />
+          <Route path="orders/:order_id/edit" element={<EditOrder />} />
         </Route>
 
         <Route
-          path="/add-order"
+          path="/admin/orders"
           element={
             <AuthorizationCheckerPage roles={[1, 2, 3]}>
-              <AddOrder />
+              <OrderList />
+            </AuthorizationCheckerPage>
+          }
+        />
+        <Route
+          path="/admin/orders/:order_id/profile"
+          element={
+            <AuthorizationCheckerPage roles={[1, 2, 3]}>
+              <OrderProfile />
             </AuthorizationCheckerPage>
           }
         />

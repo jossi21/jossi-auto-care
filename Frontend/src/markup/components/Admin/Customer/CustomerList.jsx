@@ -30,7 +30,7 @@ const CustomerList = () => {
 
   // Pagination states
   const [curPage, setCurPage] = useState(1);
-  const [limit, setLimit] = useState(5);
+  const [limit, setLimit] = useState(10);
   const [pagination, setPagination] = useState({
     total: 0,
     totalPages: 1,
@@ -87,7 +87,7 @@ const CustomerList = () => {
   };
 
   useEffect(() => {
-    fetchCustomers(1, 5);
+    fetchCustomers(1, 10);
   }, []);
 
   // pages

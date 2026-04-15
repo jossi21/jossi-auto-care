@@ -1,11 +1,9 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 import classes from "../Customer/CustomerProfile.module.css";
 import VehicleService from "../../../../services/vehicle.service";
-import { data, useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 
-const AddVehicleForm = () => {
-  const { id } = useParams();
+const AddVehicleForm = ({ customerId }) => {
   const navigate = useNavigate();
   const [vehicles, setVehicles] = useState({
     customer_id: "",
@@ -28,13 +26,10 @@ const AddVehicleForm = () => {
   const [inputErr, setInputErr] = useState("");
   // the function handle the submission process
   const handleAddVehicle = (e) => {
-    // prevent default behavior of the browser
     e.preventDefault();
 
-    // Here is the validation process
     let flag = true;
 
-    // vehicle data validation
     if (!vehicles.vehicle_year) {
       setInputErr("Vehicle data required");
       flag = false;
@@ -46,9 +41,8 @@ const AddVehicleForm = () => {
       return;
     }
 
-    // get vehicle data
     const vehicleData = {
-      customer_id: id,
+      customer_id: customerId,
       vehicle_year: vehicles.vehicle_year,
       vehicle_make: vehicles.vehicle_make,
       vehicle_model: vehicles.vehicle_model,
@@ -58,32 +52,49 @@ const AddVehicleForm = () => {
       vehicle_serial: vehicles.vehicle_serial,
       vehicle_color: vehicles.vehicle_color,
     };
-    console.log(vehicleData);
-    // get backend response from the service api
-    const response = VehicleService.addVehicle(vehicleData);
-    // console.log(response);
+
+    console.log("Sending:", vehicleData);
+
     setIsLoading(true);
-    response
-      .then((res) => res.json())
-      .then((data) => {
-        // console.log(data.data);
-        if (data.error) {
-          setServerError(data.error || "Please try again");
+
+    VehicleService.addVehicle(vehicleData)
+      .then(async (res) => {
+        console.log("Response status:", res.status);
+        const data = await res.json();
+        console.log("Response data:", data);
+
+        if (res.ok) {
+          // Success
+          setSuccessResponse(data.message || "Vehicle added successfully");
+          setServerError("");
+
+          // Reset form
+          setVehicles({
+            customer_id: "",
+            vehicle_year: "",
+            vehicle_make: "",
+            vehicle_model: "",
+            vehicle_type: "",
+            vehicle_mileage: "",
+            vehicle_tag: "",
+            vehicle_serial: "",
+            vehicle_color: "",
+          });
+
+          setTimeout(() => {
+            navigate(0); // Refresh page
+            setSuccessResponse("");
+            setIsLoading(false);
+          }, 2000);
+        } else {
+          //  Error
+          setServerError(data.error || "Something went wrong");
           setIsLoading(false);
         }
-        setSuccessResponse(data.message || "Vehicle added successfully");
-        setServerError("");
-        setTimeout(() => {
-          navigate(0);
-          setSuccessResponse("");
-          setIsLoading(false);
-        }, 2000);
       })
       .catch((error) => {
-        console.log(error);
-        setServerError(
-          error.error || data.error || data.message || "Something went wrong",
-        );
+        console.log("Error:", error);
+        setServerError(error.message || "Something went wrong");
         setIsLoading(false);
       });
   };

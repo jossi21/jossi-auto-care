@@ -118,7 +118,7 @@ const AddServiceForm = () => {
                         </div>
                       )}
                       <div className="row clearfix">
-                        {/* email input */}
+                        {/* title input */}
                         <div className="form-group col-md-12">
                           <input
                             type="text"
@@ -136,7 +136,7 @@ const AddServiceForm = () => {
                             </div>
                           )}
                         </div>
-                        {/* first name input */}
+                        {/* text area input */}
                         <div className="form-group col-md-12">
                           <textarea
                             type="text"

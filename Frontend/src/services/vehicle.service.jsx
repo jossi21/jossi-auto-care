@@ -2,13 +2,30 @@
 const api_url = import.meta.env.VITE_API_URL;
 
 // the function used to get the vehicle data
-const getVehicle = async (id) => {
+const getVehicle = async (customer_id) => {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },
   };
 
-  const response = await fetch(`${api_url}/api/vehicle/${id}`, requestOptions);
+  const response = await fetch(
+    `${api_url}/api/vehicles/${customer_id}`,
+    requestOptions,
+  );
+  return response;
+};
+
+// the function used to get the vehicle data
+const getVehicleByVehicleId = async (vehicle_id) => {
+  const requestOptions = {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  };
+
+  const response = await fetch(
+    `${api_url}/api/vehicle/${vehicle_id}`,
+    requestOptions,
+  );
   return response;
 };
 
@@ -36,6 +53,7 @@ const updateVehicle = async (updateData) => {
 };
 const VehicleService = {
   getVehicle,
+  getVehicleByVehicleId,
   addVehicle,
   updateVehicle,
 };

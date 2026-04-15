@@ -9,14 +9,17 @@ import customerService from "../../../../services/customer.services";
 import AddVehicleForm from "../vehicle/AddVehicleForm";
 import VehicleCard from "../vehicle/VehicleCard";
 import Spinner from "../../Spinner";
+import CustomerOrderCard from "../orders/CustomerOrderCard";
+import orderService from "../../../../services/order.service";
 
 const CustomerProfile = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [customer, setCustomer] = useState([]);
   const [vehicles, setVehicles] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
 
-  // console.log(vehicles);
   // toggler effect
   const [isShow, setIsShow] = useState(false);
   const [serverError, setServerError] = useState("");
@@ -48,6 +51,17 @@ const CustomerProfile = () => {
         if (vehicleData.data && vehicleData.data.length > 0) {
           setVehicles(vehicleData.data);
         }
+
+        // Fetch orders for this customer
+        const orderResponse = await orderService.getOrdersByCustomer(id);
+        if (orderResponse.ok) {
+          const orderData = await orderResponse.json();
+          if (orderData.data && orderData.data.length > 0) {
+            setOrders(orderData.data);
+            // Set the first order ID as selected
+            setSelectedOrderId(orderData.data[0].order_id);
+          }
+        }
       } catch (err) {
         setServerError(err.message || "Something went wrong");
         console.error(err);
@@ -62,10 +76,17 @@ const CustomerProfile = () => {
     }
   }, [id]);
 
+  // Handle order selection
+  const handleOrderSelect = (orderId) => {
+    setSelectedOrderId(orderId);
+  };
+
   return (
     <>
       <section className={`my-5 mx-3 `}>
         <div className={`${classes.customer__profile}`}></div>
+
+        {/* Customer Info Section */}
         <div className="d-flex ">
           <div className={`${classes.customer__info_div}`}>
             <h3 className="text-white">Info</h3>
@@ -109,6 +130,7 @@ const CustomerProfile = () => {
           </div>
         </div>
 
+        {/* Vehicles Section */}
         <div className="d-flex mb-5">
           <div className={`${classes.customer__cars_div}`}>
             <h3 className="text-white">Cars</h3>
@@ -149,7 +171,7 @@ const CustomerProfile = () => {
                       >
                         <FaTimes color="red" size={20} />
                       </button>
-                      <AddVehicleForm />
+                      <AddVehicleForm customerId={id} />
                     </div>
                   )}
                 </div>
@@ -157,11 +179,43 @@ const CustomerProfile = () => {
             )}
           </div>
         </div>
+
+        {/* Orders Section */}
         <div className="d-flex">
           <div className={`${classes.customer__orders_div}`}>
             <h3 className="text-white">Orders</h3>
           </div>
-          <div></div>
+          <div className="flex-grow-1 px-3">
+            {/* Show order list first */}
+            {orders.length > 0 ? (
+              <div>
+                <div className="mb-3">
+                  <label className="fw-bold">Select Order:</label>
+                  <select
+                    className="form-select mt-2"
+                    value={selectedOrderId || ""}
+                    onChange={(e) =>
+                      handleOrderSelect(parseInt(e.target.value))
+                    }
+                  >
+                    {orders.map((order) => (
+                      <option key={order.order_id} value={order.order_id}>
+                        Order #{order.order_id} -{" "}
+                        {new Date(order.order_date).toLocaleDateString()}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Show selected order details */}
+                {selectedOrderId && (
+                  <CustomerOrderCard order_id={selectedOrderId} />
+                )}
+              </div>
+            ) : (
+              <div>No orders found for this customer</div>
+            )}
+          </div>
         </div>
       </section>
     </>

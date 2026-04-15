@@ -1,8 +1,15 @@
 import React, { use, useState } from "react";
 import classes from "../../../../../src/assets/styles/custom.module.css";
 import customerService from "../../../../services/customer.services";
+import { useLocation, useNavigate } from "react-router";
 
 const AddCustomerForm = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // check where the user comes from
+  const isEmbedded = location.state?.embedded === true;
+  const returnPath = location.state?.from || "/admin/customers";
   // define states that holed the input values
   const [customer_email, setCustomerEmail] = useState("");
   const [customer_first_name, setCustomerFirstName] = useState("");
@@ -82,12 +89,12 @@ const AddCustomerForm = () => {
       active_customer_status,
     };
 
-    console.log(customerData);
+    // console.log(customerData);
 
     // get the response data from the backend
     const newCustomer = customerService.addCustomer(customerData);
     setLoading(true);
-    console.log(newCustomer);
+    // console.log(newCustomer);
     newCustomer
       .then((res) => res.json())
       .then((data) => {
@@ -96,10 +103,13 @@ const AddCustomerForm = () => {
           setLoading(false);
         } else {
           (setSuccessResponse(data.message), setServerError(""));
-          setTimeout(() => {
-            setLoading(false);
-            window.location.href = "/admin/customers";
-          }, 2000);
+          setLoading(false);
+          // Navigate based on how it was opened
+          if (isEmbedded) {
+            navigate(-1);
+          } else {
+            navigate(returnPath);
+          }
         }
       })
       .catch((error) => {
@@ -209,7 +219,6 @@ const AddCustomerForm = () => {
                           className="theme-btn btn-style-one"
                           type="submit"
                           data-loading-text="Please wait..."
-                          disabled={loading}
                         >
                           {" "}
                           {loading ? (

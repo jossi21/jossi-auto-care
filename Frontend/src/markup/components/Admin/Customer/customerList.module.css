@@ -69,3 +69,13 @@
 .filter__buttons button span {
   padding-right: 4px;
 }
+
+/* Search order page styling */
+.search__order__border {
+  border-left: 1px solid grey;
+  border-right: 1px solid grey;
+  border-bottom: 1px solid grey;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-radius: 5px;
+}

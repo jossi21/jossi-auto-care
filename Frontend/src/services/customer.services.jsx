@@ -14,7 +14,7 @@ const addCustomer = async (customerData) => {
 };
 
 // the api function which connect with the back end and fetch all customer data
-const allCustomers = async (page = 1, limit = 5) => {
+const allCustomers = async (page = 1, limit = 10) => {
   const requestOptions = {
     method: "GET",
     headers: { "Content-Type": "application/json" },

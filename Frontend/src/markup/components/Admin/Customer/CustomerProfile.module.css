@@ -20,7 +20,7 @@
 }
 
 .customer__name {
-  color: rgb(45, 45, 138);
+  color: rgb(45, 45, 138) !important;
 }
 
 .vehicle__not_found {
@@ -93,4 +93,35 @@
 /* Car info section */
 .car_info_section {
   padding: 10px 0 !important;
+}
+
+/* ******************************
+custom background section styling
+
+*********************************/
+.custom_bg_section {
+  background: #fefcfc;
+  box-shadow: 0 10px 12px rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+}
+
+.service__order__bg {
+  background: #fefcfc;
+  box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+}
+.service__title {
+  color: rgb(45, 45, 138);
+}
+
+.customer__data__card {
+  padding-top: 50px !important;
+  padding-bottom: 30px !important;
+}
+
+.date__picker__bg {
+  background: #fefcfc;
+  box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  height: auto;
 }

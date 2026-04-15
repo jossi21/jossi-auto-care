@@ -102,13 +102,15 @@ const Header = () => {
                         <li>
                           <Link to="/contact">Contact Us</Link>
                         </li>
-                        <li>
-                          {isAdmin ? (
-                            <Link to="/admin">Admin</Link>
-                          ) : (
-                            <Link to="/">Employee</Link>
-                          )}
-                        </li>
+                        {isLogged && (
+                          <li>
+                            {isAdmin ? (
+                              <Link to="/admin">Admin</Link>
+                            ) : (
+                              <Link to="/admin/orders">Orders</Link>
+                            )}
+                          </li>
+                        )}
                       </ul>
                     </div>
                   </nav>

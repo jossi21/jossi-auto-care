@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import customerService from "../../../../services/customer.services";
+import { FaSearch } from "react-icons/fa";
+import classes from "../../../components/Admin/Customer/customerList.module.css";
 import { useNavigate } from "react-router";
-import Spinner from "../../../components/Spinner";
-import OrderTable from "./OrderList";
+import CustomerOrderTable from "./CustomerOrderTable";
 
-const AddOrder = () => {
-  // use navigate
+const SearchCustomer = () => {
   const navigate = useNavigate();
   // store in the state the returned data
   const [customers, setCustomers] = useState([]);
@@ -54,7 +54,7 @@ const AddOrder = () => {
   };
 
   useEffect(() => {
-    fetchCustomers(1, 5);
+    fetchCustomers(1, 10);
   }, []);
 
   // search function based on search term
@@ -79,7 +79,7 @@ const AddOrder = () => {
     }
   };
   return (
-    <section className="col-lg-10 mx-auto">
+    <>
       {apiErr ? (
         <section className="contact-section">
           <div className="auto-container">
@@ -89,29 +89,55 @@ const AddOrder = () => {
           </div>
         </section>
       ) : (
-        <section className="contact-section">
+        <section className="contact-section ">
           <div className="auto-container">
-            {isLoading ? (
+            <div className="contact-title">
+              <h2 className={`${classes.customer__name}`}>
+                Create a new order
+              </h2>
+            </div>
+            <div
+              className={`${classes.search__order__border} col-lg-11 mx-auto`}
+            >
               <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
+                className={`${classes.search__container} ${classes.order__table_border}`}
               >
-                <Spinner isLoading={isLoading} />{" "}
-                <span style={{ marginTop: "10px", fontWeight: "bold" }}>
-                  Loading customers...
-                </span>
+                <FaSearch
+                  className={`${classes.search__icon}`}
+                  size={15}
+                  color="rgba(0, 0, 0, 0.4)"
+                />
+                <input
+                  type="search"
+                  className={`${classes.search__input}`}
+                  placeholder="Search for a customer using first name, last name, email address for Phone"
+                  value={searchTerm}
+                  onChange={searchHandler}
+                />
               </div>
-            ) : (
-              <OrderTable />
-            )}
+              {searchTerm ? (
+                <CustomerOrderTable
+                  fetchedCustomer={filteredCustomer}
+                  isLoading={isLoading}
+                />
+              ) : (
+                <div className="form-group col-md-12">
+                  <button
+                    onClick={() => navigate("/admin/add-customer")}
+                    className="theme-btn btn-style-one"
+                    type="submit"
+                    data-loading-text="Please wait..."
+                  >
+                    add Customer
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </section>
       )}
-    </section>
+    </>
   );
 };
 
-export default AddOrder;
+export default SearchCustomer;
