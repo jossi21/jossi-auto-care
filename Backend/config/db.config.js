@@ -1,12 +1,14 @@
 const mysql = require("mysql2/promise");
+const fs = require("fs");
+const path = require("path");
 
 let sslConfig = {};
 
-if (process.env.DB_SSL_CA) {
+if (process.env.NODE_ENV === "production") {
   sslConfig = {
     ssl: {
-      ca: process.env.DB_SSL_CA,
-      rejectUnauthorized: true,
+      ca: fs.readFileSync(path.join(__dirname, "../certs/ca.pem"), "utf8"),
+      rejectUnauthorized: false,
     },
   };
 }

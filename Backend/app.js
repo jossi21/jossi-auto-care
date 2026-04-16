@@ -1,7 +1,9 @@
 //  import express
 const express = require("express");
 // import .env
-require("dotenv").config();
+require("dotenv").config({
+  path: process.env.NODE_ENV === "production" ? ".env.production" : ".env",
+});
 // import the router to use in the app
 const router = require("./routes");
 // import cors module
