@@ -40,7 +40,7 @@ async function testDatabase() {
 }
 testDatabase();
 
-// ✅ Health check endpoint
+//  Health check endpoint
 app.get("/api/health", (req, res) => {
   res.json({
     status: "healthy",
