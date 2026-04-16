@@ -16,7 +16,7 @@ const port = process.env.PORT || 1000;
 
 // define cors options
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "*",
+  origin: process.env.FRONTEND_URL || "https://jossi-garage.netlify.app/",
   optionSuccessStatus: 200,
 };
 
