@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import classes from "./LoginForm.module.css";
 import loginService from "../../../services/login.service";
+import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 const LoginForm = () => {
   // define states that holed the input values
   const [employee_email, setEmployeeEmail] = useState("");
   const [employee_password, setEmployeePassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   // error handler states
   const [emailErr, setEmailErr] = useState("");
@@ -132,7 +134,7 @@ const LoginForm = () => {
                 {/* input password */}
                 <div className="form-group col-md-12">
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="form_subject"
                     placeholder="Employee password"
                     autoComplete="current-password"
@@ -140,6 +142,14 @@ const LoginForm = () => {
                     value={employee_password}
                     onChange={(e) => setEmployeePassword(e.target.value)}
                   />
+                  <button
+                    style={{ cursor: "pointer", zIndex: 10 }}
+                    type="button"
+                    className="position-absolute end-0 top-0 mt-2 me-4 border-0 bg-transparent"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
                   {passwordErr && (
                     <div className={classes.error__message}>{passwordErr}</div>
                   )}
