@@ -12,7 +12,7 @@ const cors = require("cors");
 const db = require("./config/db.config");
 
 // import the variable that hold our server port
-const port = process.env.PORT;
+const port = process.env.PORT || 1000;
 
 // define cors options
 const corsOptions = {
@@ -29,17 +29,6 @@ app.use(express.json());
 // use cors
 app.use(cors(corsOptions));
 
-// Test database connection on startup
-async function testDatabase() {
-  try {
-    await db.query("SELECT 1");
-    console.log("✅ Database connected successfully!");
-  } catch (error) {
-    console.error("❌ Database connection failed:", error.message);
-  }
-}
-testDatabase();
-
 //  Health check endpoint
 app.get("/api/health", (req, res) => {
   res.json({
@@ -54,8 +43,15 @@ app.get("/api/health", (req, res) => {
 app.use(router);
 
 // start the server
-app.listen(port, () => {
+app.listen(port, async () => {
   console.log(`Server running on port: ${port}`);
+
+  try {
+    await db.query("SELECT 1");
+    console.log("Database connected successfully!");
+  } catch (error) {
+    console.error("Database connection failed:", error.message);
+  }
 });
 
 // export the web server for use it the application
