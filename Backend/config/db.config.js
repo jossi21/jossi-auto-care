@@ -1,17 +1,26 @@
 const mysql = require("mysql2/promise");
 
-// Remove SSL certificate loading - use simple connection
+let sslConfig = {};
+
+if (process.env.DB_SSL_CA) {
+  sslConfig = {
+    ssl: {
+      ca: process.env.DB_SSL_CA,
+      rejectUnauthorized: true,
+    },
+  };
+}
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT || 25963,
+  port: process.env.DB_PORT || 3306,
   waitForConnections: true,
   connectionLimit: 5,
   queueLimit: 0,
-  // Remove SSL - it's causing the error
-  // ssl: { rejectUnauthorized: false }  // Optional: add this if needed
+  ...sslConfig,
 });
 
 async function query(sql, params) {
