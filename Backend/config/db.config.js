@@ -1,19 +1,6 @@
-// config/db.config.js
 const mysql = require("mysql2/promise");
-const fs = require("fs");
-const path = require("path");
 
-// Load SSL certificate for production
-let sslConfig = {};
-if (process.env.NODE_ENV === "production") {
-  try {
-    const caCert = fs.readFileSync(path.join(__dirname, "../certs/ca.pem"));
-    sslConfig = { ssl: { ca: caCert } };
-  } catch (error) {
-    console.error("Failed to load SSL certificate:", error.message);
-  }
-}
-
+// Remove SSL certificate loading - use simple connection
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
@@ -23,7 +10,8 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 5,
   queueLimit: 0,
-  ...sslConfig,
+  // Remove SSL - it's causing the error
+  // ssl: { rejectUnauthorized: false }  // Optional: add this if needed
 });
 
 async function query(sql, params) {
